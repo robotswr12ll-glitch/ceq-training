@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C2 Mastery Lab — Advanced English & CEQ Training System</title>
+<style>
+/* ============================================================
+   C2 Mastery Lab — stylesheet
+   Design: clean academic-modern, dark sidebar, warm accents.
+   ============================================================ */
+:root {
+  --ink: #1d2b3a;
+  --ink-soft: #42566b;
+  --bg: #f4f2ee;
+  --card: #ffffff;
+  --line: #e5e1d8;
+  --accent: #2f5f8a;
+  --accent-2: #c97b63;
+  --green: #4e8a5a;
+  --red: #b3543f;
+  --gold: #d9a441;
+  --shadow: 0 2px 10px rgba(29,43,58,.08);
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ---------- icons ---------- */
+.icon { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.15em; flex-shrink: 0; }
+.nav-link .icon, .nav-icon { width: 17px; height: 17px; margin-right: 9px; opacity: .85; }
+.brand .icon { width: 20px; height: 20px; margin-right: 7px; vertical-align: -4px; }
+.pill-icon { width: 15px; height: 15px; margin-right: 4px; vertical-align: -2px; }
+.card h3 .icon, .empty-state .icon, .btn .icon { margin-right: 6px; }
+.empty-state .icon { width: 40px; height: 40px; stroke-width: 1.3; color: var(--ink-soft); opacity: .5; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: var(--card); border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 14px; padding: 0 18px;
+  z-index: 40;
+}
+.brand { font-weight: 800; font-size: 19px; letter-spacing: .5px; cursor: pointer; display: flex; align-items: center; }
+.brand span { color: var(--accent-2); }
+.topbar-right { margin-left: auto; display: flex; gap: 10px; }
+.streak-pill, .xp-pill {
+  background: var(--bg); border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 12px; font-size: 13px; font-weight: 600; white-space: nowrap;
+  display: flex; align-items: center;
+}
+.streak-pill .icon { color: var(--accent-2); }
+.xp-pill .icon { color: var(--gold); }
+.hamburger { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--ink); align-items: center; }
+
+/* ---------- sidebar ---------- */
+.sidenav {
+  position: fixed; top: 56px; left: 0; bottom: 0; width: 248px;
+  background: var(--ink); color: #cfd8e2; overflow-y: auto;
+  padding: 14px 10px 40px; z-index: 35; transition: transform .25s ease;
+}
+.nav-group {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+  color: #7e93a8; margin: 18px 12px 6px;
+}
+.nav-link {
+  display: flex; align-items: center; padding: 9px 12px; border-radius: 8px; cursor: pointer;
+  font-size: 14.5px; color: #cfd8e2; transition: background .15s, color .15s;
+}
+.nav-link:hover { background: rgba(255,255,255,.07); color: #fff; }
+.nav-link.active { background: var(--accent); color: #fff; }
+.scrim { display: none; }
+
+/* ---------- main ---------- */
+.main { margin: 56px 0 0 248px; padding: 28px 30px 60px; max-width: 1180px; }
+.footer {
+  margin-left: 248px; padding: 18px 30px; color: var(--ink-soft);
+  font-size: 12.5px; border-top: 1px solid var(--line);
+}
+
+/* ---------- generic components ---------- */
+.view { animation: fadeUp .35s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: none;} }
+.view h1 { font-size: 26px; margin-bottom: 6px; }
+.view .sub { color: var(--ink-soft); margin-bottom: 22px; font-size: 14.5px; }
+.view h2 { font-size: 19px; margin: 26px 0 10px; display: flex; align-items: center; gap: 8px; }
+.view h2 .icon { color: var(--accent); }
+.grid { display: grid; gap: 14px; }
+.grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px; box-shadow: var(--shadow);
+}
+.card h3 { font-size: 16px; margin-bottom: 8px; display: flex; align-items: center; }
+.card p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
+.card.clickable { cursor: pointer; transition: transform .15s, box-shadow .15s; }
+.card.clickable:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(29,43,58,.13); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; border: none; border-radius: 9px; cursor: pointer;
+  background: var(--accent); color: #fff; font-size: 14px; font-weight: 600;
+  padding: 10px 18px; transition: filter .15s, transform .1s;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: scale(.97); }
+.btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+.btn.warm { background: var(--accent-2); }
+.btn.green { background: var(--green); }
+.btn.small { padding: 6px 12px; font-size: 13px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+.tag {
+  display: inline-block; font-size: 11.5px; font-weight: 600; border-radius: 999px;
+  padding: 3px 10px; background: var(--bg); border: 1px solid var(--line); color: var(--ink-soft);
+  margin: 2px 3px 2px 0;
+}
+.tag.blue { background: #e7eef5; border-color: #c9d9e8; color: var(--accent); }
+.tag.warm { background: #f9ece6; border-color: #ecd0c4; color: var(--accent-2); }
+.tag.green { background: #e8f2ea; border-color: #cbe0d0; color: var(--green); }
+
+.progress-bar { height: 9px; background: #e9e6df; border-radius: 99px; overflow: hidden; }
+.progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 99px; transition: width .5s ease; }
+
+input[type="text"], input[type="search"], textarea, select {
+  width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 10px 13px;
+  font-size: 14.5px; font-family: inherit; background: #fff; color: var(--ink);
+}
+textarea { resize: vertical; min-height: 110px; line-height: 1.55; }
+input:focus, textarea:focus, select:focus { outline: 2px solid rgba(47,95,138,.35); border-color: var(--accent); }
+
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--card); }
+table.data th { text-align: left; padding: 9px 10px; border-bottom: 2px solid var(--ink); color: var(--accent); font-size: 12.5px; text-transform: uppercase; letter-spacing: .5px; }
+table.data td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.45; }
+table.data tr:nth-child(even) td { background: #faf9f6; }
+
+.note-box { background: #fdf7e8; border: 1px solid #eedda8; border-left: 4px solid var(--gold); border-radius: 8px; padding: 12px 15px; font-size: 14px; line-height: 1.55; margin: 12px 0; }
+.tip-box { background: #e9f2f9; border: 1px solid #c4dcee; border-left: 4px solid var(--accent); border-radius: 8px; padding: 12px 15px; font-size: 14px; line-height: 1.55; margin: 12px 0; }
+
+/* ---------- dashboard ---------- */
+.stat-card { text-align: center; padding: 20px 14px; }
+.stat-card .icon-wrap { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.stat-card .icon-wrap .icon { width: 22px; height: 22px; color: var(--accent); }
+.stat-card .big { font-size: 30px; font-weight: 800; color: var(--accent); }
+.stat-card .lbl { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+.mastery-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; font-size: 14px; }
+.mastery-row .name { width: 190px; flex-shrink: 0; font-weight: 600; }
+.mastery-row .pct { width: 46px; text-align: right; color: var(--ink-soft); font-size: 13px; }
+
+/* ---------- quiz / trainers ---------- */
+.q-card { max-width: 760px; }
+.q-question { font-size: 17px; font-weight: 600; line-height: 1.5; margin: 12px 0 18px; }
+.q-option {
+  display: block; width: 100%; text-align: left; background: #fff;
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 15px;
+  margin: 8px 0; cursor: pointer; font-size: 15px; transition: border-color .15s, background .15s;
+}
+.q-option:hover { border-color: var(--accent); }
+.q-option.correct { background: #e8f2ea; border-color: var(--green); }
+.q-option.wrong { background: #f9e9e5; border-color: var(--red); }
+.q-option:disabled { cursor: default; }
+.q-expl { margin-top: 14px; padding: 13px 16px; border-radius: 10px; font-size: 14px; line-height: 1.55;
+  background: #eef4f9; border: 1px solid #cfdfec; display: none; }
+.q-expl.show { display: block; animation: fadeUp .3s ease; }
+.q-meta { display: flex; justify-content: space-between; color: var(--ink-soft); font-size: 13px; margin-bottom: 4px; }
+
+/* ---------- flashcards ---------- */
+.flash-stage { max-width: 620px; margin: 0 auto; perspective: 1200px; }
+.flashcard {
+  position: relative; width: 100%; min-height: 240px; cursor: pointer;
+  transform-style: preserve-3d; transition: transform .5s;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.flash-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 26px; box-shadow: var(--shadow); text-align: center;
+}
+.flash-face.back { transform: rotateY(180deg); background: #f8fbff; }
+.flash-face .word { font-size: 26px; font-weight: 800; color: var(--accent); }
+.flash-face .hint { margin-top: 10px; color: var(--ink-soft); font-size: 14px; }
+.flash-face .answer { font-size: 17px; line-height: 1.6; }
+.flash-face .example { margin-top: 12px; font-style: italic; color: var(--ink-soft); font-size: 14px; }
+.srs-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 18px; }
+.srs-buttons .btn { min-width: 110px; }
+
+/* ---------- speaking ---------- */
+.timer-display { font-size: 52px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; color: var(--accent); }
+.timer-display.running { color: var(--accent-2); }
+
+/* ---------- mistakes ---------- */
+.mistake-item { border: 1px solid var(--line); border-radius: 10px; padding: 13px 15px; margin: 8px 0; background: var(--card); }
+.mistake-item .wrong-s { color: var(--red); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.mistake-item .right-s { color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.mistake-item .wrong-s .icon, .mistake-item .right-s .icon { flex-shrink: 0; }
+.mistake-item .why { color: var(--ink-soft); font-size: 13px; margin-top: 5px; }
+.mistake-item .fix-row { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.mistake-item.revealed .fix-row { display: block; animation: fadeUp .3s ease; }
+
+/* ---------- compare (native vs learner) ---------- */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 10px 0; }
+.compare > div { padding: 14px 16px; font-size: 14px; line-height: 1.55; }
+.compare .learner { background: #faf4f2; border-right: 1px solid var(--line); }
+.compare .native { background: #f2f7f3; }
+.compare .who { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.compare .learner .who { color: var(--red); }
+.compare .native .who { color: var(--green); }
+
+/* ---------- notes ---------- */
+.note-item { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.note-item .note-meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 8px; display: flex; justify-content: space-between; align-items: center; }
+.hl { background: #fff0b3; padding: 0 3px; border-radius: 3px; cursor: pointer; }
+
+/* ---------- planner ---------- */
+.day-card { border-left: 4px solid var(--accent); }
+.day-card .blocks { font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); }
+.check-line { display: flex; align-items: center; gap: 9px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 14px; cursor: pointer; }
+.check-line input { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+.check-line.done span { text-decoration: line-through; color: var(--ink-soft); }
+
+/* ---------- misc ---------- */
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+.filter-chip { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 14px; font-size: 13px; cursor: pointer; font-weight: 600; color: var(--ink-soft); }
+.filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.empty-state { text-align: center; color: var(--ink-soft); padding: 50px 20px; }
+.empty-state .icon-wrap { margin-bottom: 10px; }
+.kb-article { max-width: 820px; }
+.kb-article h2 { margin-top: 22px; }
+.kb-article p, .kb-article li { font-size: 14.5px; line-height: 1.65; color: var(--ink); }
+.kb-article ul { padding-left: 22px; margin: 8px 0; }
+.bm-btn { background: none; border: none; cursor: pointer; font-size: 17px; opacity: .55; display: inline-flex; color: var(--gold); }
+.bm-btn .icon { width: 17px; height: 17px; }
+.bm-btn.active { opacity: 1; }
+.bm-btn.active .icon { fill: var(--gold); }
+.toast {
+  position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(90px);
+  background: var(--ink); color: #fff; border-radius: 10px; padding: 11px 20px;
+  font-size: 14px; z-index: 60; transition: transform .3s ease; box-shadow: 0 6px 22px rgba(0,0,0,.25);
+  display: flex; align-items: center; gap: 8px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.result-hero { text-align: center; padding: 30px 10px; }
+.result-hero .score { font-size: 46px; font-weight: 800; color: var(--accent); }
+
+/* ---------- boot screen ---------- */
+.boot-screen {
+  position: fixed; inset: 0; background: var(--bg); z-index: 100;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+}
+.boot-screen .icon { width: 40px; height: 40px; color: var(--accent); animation: spin 1s linear infinite; }
+.boot-screen p { color: var(--ink-soft); font-size: 14px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .grid.cols-3, .grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 760px) {
+  .hamburger { display: inline-flex; }
+  .sidenav { transform: translateX(-100%); width: 262px; box-shadow: 4px 0 18px rgba(0,0,0,.25); }
+  .sidenav.open { transform: none; }
+  .scrim.show { display: block; position: fixed; inset: 56px 0 0 0; background: rgba(0,0,0,.4); z-index: 30; }
+  .main, .footer { margin-left: 0; }
+  .grid.cols-2, .grid.cols-3, .grid.cols-4, .two-col { grid-template-columns: 1fr; }
+  .mastery-row .name { width: 130px; }
+  .compare { grid-template-columns: 1fr; }
+  .compare .learner { border-right: none; border-bottom: 1px solid var(--line); }
+  .main { padding: 20px 16px 50px; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .view, .q-expl.show, .mistake-item.revealed .fix-row { animation: none; }
+  .boot-screen .icon { animation: none; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Icon sprite: all icons used across the app, defined once -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4 0 7-3 7-7 0-5-4-7-5-11-1 2-1 4-3 5-3 2-5 5-5 8 0 3 2 5 6 5z"/><path d="M12 22c1.7 0 3-1.3 3-3 0-2-1.5-3-2-5-.5 1-1 1.5-2 2-1.3.9-2 2-2 3 0 1.7 1.3 3 3 3z"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-2-5-3-9-3v15c4 0 7 1 9 3 2-2 5-3 9-3V3c-4 0-7 1-9 3z"/><path d="M12 6v15"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H20v18H7.5A2.5 2.5 0 0 0 5 22.5z"/><path d="M5 19.5A2.5 2.5 0 0 1 7.5 17H20"/></symbol>
+  <symbol id="i-message-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c4.97 0 9-3.58 9-8s-4.03-8-9-8-9 3.58-9 8c0 1.7.5 3.28 1.4 4.6L3 21l4.6-1.2C9 20.3 10.5 20 12 20z"/></symbol>
+  <symbol id="i-message-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M7 21l3-4"/></symbol>
+  <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3z"/><path d="M12 9.5v5"/><path d="M12 17.2v.1"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5l5 5M14.5 9.5l-5 5"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="M2 13l10 5 10-5"/><path d="M2 18l10 5 10-5"/></symbol>
+  <symbol id="i-cards" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2"/><rect x="4" y="8" width="12" height="14" rx="2"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 15a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14.5 9a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v4M8 22h8"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  <symbol id="i-headphones" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M9 13.5 7 22l5-3 5 3-2-8.5"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></symbol>
+  <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V12M10 20V6M16 20v-9"/><path d="M2 20h20"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="i-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 1 1-6.36 2.64"/></symbol>
+</svg>
+
+<div class="boot-screen" id="bootScreen">
+  <svg class="icon "><use href="#i-loader"></use></svg>
+  <p>Loading your progress…</p>
+</div>
+
+<header class="topbar">
+  <button class="hamburger" id="hamburger" aria-label="Menu"><svg class="icon "><use href="#i-menu"></use></svg></button>
+  <div class="brand" data-nav="dashboard"><svg class="icon "><use href="#i-award"></use></svg>C2 <span>Mastery Lab</span></div>
+  <div class="topbar-right">
+    <div class="streak-pill" title="Daily streak"><svg class="icon pill-icon"><use href="#i-flame"></use></svg><span id="streakCount">0</span></div>
+    <div class="xp-pill" title="Experience points"><svg class="icon pill-icon"><use href="#i-zap"></use></svg><span id="xpCount">0</span> XP</div>
+  </div>
+</header>
+<nav class="sidenav" id="sidenav">
+  <div class="nav-group">Overview</div>
+  <a class="nav-link" data-nav="dashboard"><svg class="icon nav-icon"><use href="#i-grid"></use></svg> Dashboard</a>
+  <a class="nav-link" data-nav="planner"><svg class="icon nav-icon"><use href="#i-calendar"></use></svg> Study Plans</a>
+  <div class="nav-group">Learn</div>
+  <a class="nav-link" data-nav="knowledge"><svg class="icon nav-icon"><use href="#i-book-open"></use></svg> Knowledge Base</a>
+  <a class="nav-link" data-nav="native"><svg class="icon nav-icon"><use href="#i-message-circle"></use></svg> Native vs Learner</a>
+  <a class="nav-link" data-nav="mistakes"><svg class="icon nav-icon"><use href="#i-alert-triangle"></use></svg> 100 Advanced Mistakes</a>
+  <div class="nav-group">Train</div>
+  <a class="nav-link" data-nav="quiz"><svg class="icon nav-icon"><use href="#i-check-circle"></use></svg> Quizzes</a>
+  <a class="nav-link" data-nav="grammar"><svg class="icon nav-icon"><use href="#i-layers"></use></svg> Grammar Trainer</a>
+  <a class="nav-link" data-nav="flashcards"><svg class="icon nav-icon"><use href="#i-cards"></use></svg> Vocab Flashcards (SRS)</a>
+  <a class="nav-link" data-nav="collocations"><svg class="icon nav-icon"><use href="#i-link"></use></svg> Collocations</a>
+  <a class="nav-link" data-nav="idioms"><svg class="icon nav-icon"><use href="#i-message-square"></use></svg> Idioms & Phrasal Verbs</a>
+  <a class="nav-link" data-nav="pronunciation"><svg class="icon nav-icon"><use href="#i-mic"></use></svg> Pronunciation & Shadowing</a>
+  <a class="nav-link" data-nav="speaking"><svg class="icon nav-icon"><use href="#i-clock"></use></svg> Speaking Prompts</a>
+  <a class="nav-link" data-nav="writing"><svg class="icon nav-icon"><use href="#i-edit"></use></svg> Writing Studio</a>
+  <a class="nav-link" data-nav="reading"><svg class="icon nav-icon"><use href="#i-book"></use></svg> Reading Lab</a>
+  <a class="nav-link" data-nav="listening"><svg class="icon nav-icon"><use href="#i-headphones"></use></svg> Listening Tracker</a>
+  <div class="nav-group">Exam</div>
+  <a class="nav-link" data-nav="ceq"><svg class="icon nav-icon"><use href="#i-award"></use></svg> CEQ / IELTS / TOEFL Hub</a>
+  <div class="nav-group">Tools</div>
+  <a class="nav-link" data-nav="notes"><svg class="icon nav-icon"><use href="#i-note"></use></svg> Notes & Highlights</a>
+  <a class="nav-link" data-nav="search"><svg class="icon nav-icon"><use href="#i-search"></use></svg> Search Everything</a>
+  <a class="nav-link" data-nav="stats"><svg class="icon nav-icon"><use href="#i-bar-chart"></use></svg> Statistics</a>
+</nav>
+<div class="scrim" id="scrim"></div>
+<main class="main" id="main"><!-- views rendered here --></main>
+<footer class="footer">
+  <span>Progress is saved to your account and persists across visits to this app.</span>
+</footer>
+<div class="toast" id="toast"></div>
+<script>
+/* ============================================================
+   C2 Mastery Lab — content database
+   All datasets are plain JS objects so the app stays framework-free
+   and easy to extend. Add items to any array and the views pick
+   them up automatically.
+   ============================================================ */
+
+/* ---------------- KNOWLEDGE BASE ---------------- */
+const KNOWLEDGE = [
+{
+  id: "kb-cefr", cat: "Proficiency", title: "What actually separates B2, C1 and C2",
+  tags: ["CEFR", "levels", "proficiency", "C1", "C2"],
+  summary: "The three real shifts: from explicit to implicit meaning, from correctness to flexibility, from assembly to automaticity.",
+  body: `<p>The CEFR is a can-do framework, so the levels differ in the <strong>conditions under which performance holds up</strong>, not in how many rules you know. B2 = fluent interaction on familiar and work topics without strain. C1 = demanding texts, implicit meaning, flexible academic/professional use, little obvious searching for words. C2 = virtually everything understood with ease, finer shades of meaning differentiated even in complex situations.</p>
+  <h2>The three shifts</h2>
+  <ul>
+  <li><strong>Implicitness shift</strong> — B2 catches main ideas; C1 catches implication and attitude; C2 catches irony, nuance and cultural allusion under adverse conditions (fast speech, dense prose).</li>
+  <li><strong>Flexibility shift</strong> — C1 says things correctly; C2 says the same thing five ways and picks the one that fits register, audience and rhetorical moment. Cambridge descriptors call this using a wide range "with flexibility".</li>
+  <li><strong>Automaticity shift</strong> — C2 speakers retrieve formulaic sequences whole instead of assembling sentences word by word, which is why they stay precise at full speed.</li>
+  </ul>
+  <div class="tip-box"><strong>Exam anchors:</strong> C1 ≈ IELTS 7–8, TOEFL 95–109, Cambridge Scale 180–199. C2 ≈ IELTS 8.5–9, TOEFL 110–120, Cambridge Scale 200–230.</div>`
+},
+{
+  id: "kb-plateau", cat: "Proficiency", title: "What improves fast, what plateaus, what predicts proficiency",
+  tags: ["plateau", "fossilization", "progress", "skills"],
+  summary: "Receptive skills improve fastest; articles, prepositions, collocation and prosody plateau earliest — and need deliberate intervention.",
+  body: `<p><strong>Fastest improving:</strong> receptive vocabulary and listening comprehension (every hour of input feeds them), then reading speed and inferencing, then speaking fluency via repetition training (4/3/2 produced ~50% speech-rate gains in Nation's 1989 study).</p>
+  <p><strong>Plateau-prone:</strong> articles, prepositions and collocations — corpus studies classify most prepositional error types as fossilized rather than developmental, and interviews with very advanced learners find article/preposition slips as the last surviving error class. Prosody (rhythm, stress, intonation) is the second plateau zone because it is acquired early and implicitly.</p>
+  <p><strong>Best predictors of rated proficiency:</strong> (1) formulaic language command — idioms, collocations, lexical bundles; (2) vocabulary depth, not just size; (3) discourse management — organizing extended turns. All three are trainable with targeted work.</p>
+  <div class="note-box"><strong>Reframe:</strong> accent ≠ intelligibility. Research by Derwing, Munro, Trofimovich & Isaacs shows you can keep an accent and still be fully intelligible and highly rated. Target prosodic control, not accent erasure.</div>`
+},
+{
+  id: "kb-formulaic", cat: "Vocabulary", title: "Formulaic language: the native speaker's secret engine",
+  tags: ["formulaic language", "chunks", "collocations", "idioms", "lexical bundles", "nativelike"],
+  summary: "Natives store hundreds of thousands of prefabricated chunks and process them faster. Chunk command is the closest proxy for nativelikeness.",
+  body: `<p>Corpus and processing research (Wray; Annual Review of Applied Linguistics) shows native speakers store and retrieve vast inventories of prefabricated sequences — idioms, binomials, collocations, lexical bundles — and process them measurably faster than word-by-word strings. Very proficient non-natives begin to show the same advantage; less proficient learners process everything analytically.</p>
+  <h2>Why it matters for you</h2>
+  <ul>
+  <li>A grammatically perfect sentence assembled word-by-word still <em>sounds</em> non-native, because it lacks conventionalized phrasing and rhythmic chunking.</li>
+  <li>Chunks are retrieved whole, freeing working memory for content — fluency and precision at the same time.</li>
+  <li>Examiners score "appropriacy" largely through collocation: <em>heavy snow</em>, not <em>big snow</em>.</li>
+  </ul>
+  <div class="tip-box"><strong>Training rule:</strong> record vocabulary as units (verb + noun + preposition), never as isolated words. Every flashcard in this app includes collocations for exactly this reason.</div>`
+},
+{
+  id: "kb-vocab-size", cat: "Vocabulary", title: "Vocabulary size targets and the 98% coverage rule",
+  tags: ["vocabulary size", "word families", "coverage", "Nation", "reading"],
+  summary: "8,000–9,000 word families for comfortable reading, 6,000–7,000 for listening, ~20,000 for an educated native.",
+  body: `<p>Nation's corpus research: 98% lexical coverage is the threshold for comfortable unassisted comprehension of novels and newspapers — that takes roughly <strong>8,000–9,000 word families</strong>. For spoken discourse, ~6,000–7,000 families reach the same coverage. Educated native speakers command ~20,000 families receptively.</p>
+  <p>At 95% coverage you meet one unknown word every two lines — enough to drain the working memory you need for inference. That is why the C1→C2 growth zone is precisely the <strong>mid-frequency band (4,000–9,000)</strong>: academic vocabulary, precise near-synonyms, and the collocations they live in.</p>
+  <div class="tip-box"><strong>Method ranking (evidence-based):</strong> 1) spaced retrieval practice with feedback · 2) extensive reading at 95–98% coverage · 3) reading-while-listening · 4) deliberate chunk study · 5) pushed output with feedback · 6) keyword mnemonics (supplement) · 7) word lists / rereading (weakest).</div>`
+},
+{
+  id: "kb-grammar-rank", cat: "Grammar", title: "The advanced grammar hit-list, ranked",
+  tags: ["grammar", "articles", "prepositions", "inversion", "hedging", "ranking"],
+  summary: "Articles and prepositions first (fossilization), then colligation, modal nuance, hedging, and the formal patterns examiners reward.",
+  body: `<p>Advanced grammar problems are deployment problems: you know the rules, but under fluency pressure the wrong form comes out. Ranked by frequency × examiner visibility × resistance to self-correction:</p>
+  <ul>
+  <li><strong>1–3.</strong> Articles, prepositions, colligation/verb patterns — fossilized accuracy problems; fix with an error log + targeted feedback loops.</li>
+  <li><strong>4–5.</strong> Modal nuance and hedging — the epistemic gradient (<em>might well, could hardly, would have thought</em>); central to sounding C2.</li>
+  <li><strong>6–7.</strong> Advanced conditionals and discourse markers — mixed/inverted conditionals; concessive markers beyond <em>firstly/secondly</em>.</li>
+  <li><strong>8–13.</strong> Relative-clause finesse, inversion, participial phrases, ellipsis/substitution, clefts, subjunctive — range-and-register patterns with high exam payoff.</li>
+  </ul>
+  <div class="tip-box">Cambridge examiners explicitly listen for inversion, sophisticated conditionals, modal range and reported speech at C1+. The Grammar Trainer in this app drills exactly these areas.</div>`
+},
+{
+  id: "kb-listening", cat: "Listening", title: "Near-native listening: decoding beats comprehension",
+  tags: ["listening", "connected speech", "elision", "assimilation", "accents", "dictation", "shadowing"],
+  summary: "The bottleneck is phonological decoding of reduced speech — intrusion, elision, reduction — plus accent flexibility and pragmatic inference.",
+  body: `<p>At C1 your listening failures are rarely vocabulary failures — they are <strong>decoding</strong> failures. Native speech deletes syllables, assimilates (<em>did you</em> → /ˈdɪdʒə/), links, and reduces function words to schwa. Experimental dictation studies show intrusion, elision and reduction cause the most comprehension damage; lexical segmentation is the single most common cause of listening breakdown.</p>
+  <h2>The three-layer fix</h2>
+  <ul>
+  <li><strong>Bottom-up decoding:</strong> daily dictation of 60–90s authentic clips + shadowing. Verify against transcripts.</li>
+  <li><strong>Accent flexibility:</strong> rotate British, American, Australian, Irish and non-native Englishes weekly to build accent-invariant categories.</li>
+  <li><strong>Pragmatic inference:</strong> humor, sarcasm, cultural reference. Learners comprehend slapstick (~89%) far better than sarcasm (~54%) or cultural references (~49%) — but targeted humorous input produces large gains in weeks.</li>
+  </ul>
+  <div class="note-box"><strong>Exam note:</strong> Cambridge Listening plays recordings twice. First pass = gist and stance; second pass = confirm. Correct answers track the speaker's <em>final</em> position, past the "Although I agree with X, I must admit Y" pivot.</div>`
+},
+{
+  id: "kb-writing", cat: "Writing", title: "Native-quality writing vs advanced learner writing",
+  tags: ["writing", "cohesion", "register", "lexical bundles", "sentence rhythm", "style"],
+  summary: "Expert prose is noun-phrase dense, holds one register, and manages information flow; learner prose stays conversational even at C1.",
+  body: `<p>Corpus comparisons show expert academic prose is dense with noun-phrase and prepositional-phrase bundles (<em>the extent to which, the nature of the</em>), while learner writing — even at C1 — leans on conversational verb-phrase frames. Natives also honor the given→new contract, use ellipsis and substitution to avoid repetition, and vary sentence length deliberately.</p>
+  <h2>The four exam criteria and how to move each</h2>
+  <ul>
+  <li><strong>Content / Task Achievement:</strong> address every rubric element explicitly; a missed bullet costs a whole criterion.</li>
+  <li><strong>Communicative Achievement:</strong> one register, held for the entire text; match genre conventions (report headings, review recommendation, article title).</li>
+  <li><strong>Organisation:</strong> paragraph architecture — topic sentence → development → mini-conclusion; a range of linkers, not a sequence of <em>firstly/secondly</em>.</li>
+  <li><strong>Language:</strong> controlled risk beats safe simplicity: inversion, clefts, participle clauses, precise collocation.</li>
+  </ul>
+  <div class="note-box"><strong>Biggest C1 writing failure (examiner consensus):</strong> register inconsistency — mixing <em>Furthermore, it is imperative</em> with <em>a lot of / kinda</em>. It signals you rent phrases instead of owning a register.</div>`
+},
+{
+  id: "kb-thinking", cat: "Cognition", title: "Thinking in English: inner speech, automaticity, cognitive load",
+  tags: ["inner speech", "thinking in English", "automaticity", "translation", "cognitive load"],
+  summary: "L2 inner speech develops in a documented sequence; translation dependence fades as L2-internal associations densify.",
+  body: `<p>"Thinking in English" is the development of <strong>L2 inner speech</strong> — covert verbal thinking in the second language. De Guerrero's research documents a sequence: inward replay of what you just heard → deliberate recall of previously met language → mental rehearsal of future conversations → imagined dialogues → spontaneous private verbalization in English.</p>
+  <p>Translation dependence persists while your English words are linked to L1 equivalents instead of to concepts and to other English words. The cure is denser L2-internal associations: definitions in English, collocations, image and situation links.</p>
+  <h2>Daily training</h2>
+  <ul>
+  <li>5-minute inner narration blocks: describe what you are doing and planning, in English, silently.</li>
+  <li>Pre-conversation mental rehearsal; post-conversation "re-say it better" replays.</li>
+  <li>Voice-note monologue journaling with a no-L1 rule.</li>
+  </ul>
+  <div class="tip-box">Every process you automatize (chunks, weak forms, article reflexes) frees working memory for content — that is the mechanical reason chunk acquisition pays twice.</div>`
+},
+{
+  id: "kb-srs", cat: "Methods", title: "Memory science: retrieval, spacing, and desirable difficulties",
+  tags: ["spaced repetition", "retrieval practice", "testing effect", "interleaving", "desirable difficulties", "memory"],
+  summary: "Retrieval with feedback beats restudy robustly; spacing and interleaving make it durable. Rereading feels good and works badly.",
+  body: `<p>The strongest findings in learning science, applied to vocabulary and forms:</p>
+  <ul>
+  <li><strong>Retrieval practice:</strong> recalling an item (with corrective feedback) produces better long-term retention than restudying it — and the advantage grows over learning rounds.</li>
+  <li><strong>Spacing:</strong> distributed practice beats massed practice; expanding intervals are optimal. This app's flashcards use a 5-box expanding schedule.</li>
+  <li><strong>Interleaving & variation:</strong> mixing related skills within a session improves discrimination and transfer.</li>
+  <li><strong>Desirable difficulties:</strong> practice near an ~85% success rate — hard enough to force adaptation, easy enough to persist.</li>
+  <li><strong>Fading feedback:</strong> check yourself against transcripts and models before consulting answers.</li>
+  </ul>
+  <div class="note-box"><strong>Metacognitive trap:</strong> learners consistently <em>predict</em> rereading works better, while tests show the opposite. Trust retrieval, not fluency-of-feeling.</div>`
+},
+{
+  id: "kb-shadowing", cat: "Methods", title: "Shadowing and 4/3/2: the two fluency engines",
+  tags: ["shadowing", "4/3/2", "fluency", "pronunciation", "prosody", "speaking"],
+  summary: "Shadowing rebuilds perception and prosody; 4/3/2 proceduralizes fluency. Both have direct experimental support.",
+  body: `<p><strong>Shadowing</strong> = tracking and vocalizing speech in near-real time. It trains speech segmentation, stress-pattern perception, phonological coding in working memory, and perceived fluency. Protocol: pre-shadow (before studying the text) for bottom-up perception → study transcript → post-shadow for consolidation. 10–15 minutes daily.</p>
+  <p><strong>4/3/2</strong> = deliver the same talk in 4 minutes, then 3, then 2 (ideally to different listeners). Nation's original study recorded ~50% speech-rate increases and 25% hesitation reductions within a single session; De Jong & Perfetti (2011) showed durable proceduralization. Note: it improves <em>fluency</em>, not complexity — pair it with feedback for accuracy.</p>
+  <div class="tip-box">TOEFL's engine-scored speaking measures rate, pauses and hesitations directly — fluency training has literal score payoff there. Use the Speaking Prompts tool with the built-in timer.</div>`
+},
+{
+  id: "kb-ceq", cat: "Exam", title: "CEQ decoded: what C1 Advanced and C2 Proficiency actually measure",
+  tags: ["CEQ", "C1 Advanced", "C2 Proficiency", "Cambridge", "Use of English", "scoring"],
+  summary: "Four equally weighted papers; Use of English is the differentiator; Band 3/5 is the level threshold; range-with-control is what examiners reward.",
+  body: `<p>C1 Advanced (pass = 180+; Grade A at 200+ certifies C2 performance) and C2 Proficiency (pass = 200+; Grade A at 220+) are criterion-referenced qualifications with lifetime validity. Four papers — Reading & Use of English, Writing, Listening, Speaking — each weighted equally.</p>
+  <h2>The hidden curriculum</h2>
+  <ul>
+  <li><strong>Use of English</strong> directly tests collocation, phrasal verbs, word formation (watch for negative prefixes: <em>rely → unreliability</em>) and key-word transformations. No equivalent exists in IELTS/TOEFL.</li>
+  <li><strong>Speaking</strong> is scored on 5 criteria (Grammar, Lexis, Discourse Management, Pronunciation, Interactive Communication, each 0–5 doubled) + Global Achievement (0–5 ×5) = 75 marks. Band 3 ≈ level pass. Half-bands exist: six half-band gains ≈ +10%.</li>
+  <li><strong>Interaction is scored:</strong> link to your partner's contributions, widen the scope, negotiate toward an outcome. Treating the partner as a prop caps your mark.</li>
+  <li><strong>Writing</strong>: C2 Part 1 requires summarizing and evaluating two texts <em>plus your own ideas</em> in 240–280 words. Risk-with-control outscores caution.</li>
+  </ul>
+  <div class="tip-box">Visit the CEQ / IELTS / TOEFL Hub in this app for full format tables, scale anchors and failure points.</div>`
+},
+{
+  id: "kb-native-layer", cat: "Speaking", title: "The unconscious layer: what natives do without knowing it",
+  tags: ["discourse markers", "hedging", "understatement", "backchannel", "storytelling", "sarcasm", "native speakers"],
+  summary: "Hedging by default, vagueness tags, tails, backchannels, storytelling schema, sarcasm prosody — the layer instruction never teaches.",
+  body: `<p>Native-like speech contains behaviors natives deploy unconsciously: discourse markers to manage structure (<em>Right. So. Anyway.</em>), hedging by default (<em>kind of, I guess, arguably</em>), vagueness tags (<em>…or something, …and stuff</em>), tails (<em>Strange film, that.</em>), headers (<em>That guy from work, he finally quit.</em>), backchannels (<em>uh-huh, no way, fair enough</em>), understatement and hyperbole for social effect, <em>be like</em> for animated quotation, and sarcasm prosody (flat tone + exaggerated stress).</p>
+  <p>Narratives follow the Labov schema: abstract → orientation → complicating action → evaluation → resolution → coda (<em>You'll never guess… / So there I was… / Long story short…</em>).</p>
+  <div class="tip-box"><strong>Acquisition path:</strong> high-volume unscripted input (panel shows, podcasts) + active noticing logs + scripted imitation via shadowing. Compare learner vs native phrasing in the Native vs Learner tool.</div>`
+},
+{
+  id: "kb-deliberate", cat: "Methods", title: "Deliberate practice design for language mastery",
+  tags: ["deliberate practice", "drills", "feedback", "error log", "training design"],
+  summary: "Defined sub-skill targets, edge-of-ability practice, immediate feedback, spaced and interleaved scheduling.",
+  body: `<p>Deliberate practice for language = (1) a defined sub-skill target, (2) practice at the edge of current ability (~85% success zone), (3) immediate feedback, (4) desirable difficulties — spacing, interleaving, retrieval, variation — built into the schedule.</p>
+  <h2>The fossil-breaking loop (for articles, prepositions, colligation)</h2>
+  <ul>
+  <li>Record yourself weekly; transcribe 3 minutes; log every error by category.</li>
+  <li>Drill the top recurring category with transformation exercises.</li>
+  <li>Re-record the same task; compare error counts.</li>
+  </ul>
+  <p>Fossilized errors do not dissolve with more input — they dissolve with <em>noticed, logged, drilled, re-tested</em> cycles. Estimates: 6–12 months of consistent loops to measurably dislodge entrenched preposition/article errors.</p>
+  <div class="note-box"><strong>Honest uncertainty:</strong> the optimal input:output hour ratio at C1→C2 is not established by controlled research; 60/40 input-to-output is an expert-consensus heuristic, not a measured value.</div>`
+},
+{
+  id: "kb-reading", cat: "Reading", title: "Reading at C2: speed, inference, and dense genres",
+  tags: ["reading", "speed", "inference", "academic reading", "philosophy", "literary"],
+  summary: "Coverage drives speed; speed frees inference. Genre-specific strategies for philosophy, literature and scientific papers.",
+  body: `<p>Reading speed follows coverage: below 98% lexical coverage, unknown words consume the working memory needed for inference, and subvocalized word-by-word parsing caps you at ~130–180 wpm. Repeated reading of known texts plus high-volume reading at 98% coverage is the evidence-backed speed builder — not skimming drills.</p>
+  <h2>Genre strategies</h2>
+  <ul>
+  <li><strong>Dense philosophy:</strong> parse the clause skeleton first (subject–verb–object), modifiers second; tolerate long periodic sentences by reading for the main verb.</li>
+  <li><strong>Literary texts:</strong> track narrator reliability, tone shifts and free indirect discourse; inference questions target these.</li>
+  <li><strong>Scientific papers:</strong> schema-driven reading — abstract → claims → evidence quality; expect NP-dense bundles and hedged claims (<em>these results suggest…</em>).</li>
+  </ul>
+  <div class="tip-box">C2 Proficiency Reading rewards exactly this: summarizing and evaluating arguments across texts. Practice with the Reading Lab passages.</div>`
+}
+];
+
+/* ---------------- 100 ADVANCED MISTAKES ---------------- */
+const MISTAKES = [
+// Articles & determiners
+{cat:"Articles", wrong:"I went to the bed.", right:"I went to bed.", why:"Institutional use (bed/school/church/prison) takes no article."},
+{cat:"Articles", wrong:"The life is short.", right:"Life is short.", why:"Generic abstract nouns take zero article."},
+{cat:"Articles", wrong:"She gave me an advice.", right:"She gave me some advice.", why:"Advice is uncountable; use 'some' or 'a piece of'."},
+{cat:"Articles", wrong:"It matters in the society.", right:"It matters in society.", why:"Generic 'society' = no article; 'the society' = a club."},
+{cat:"Articles", wrong:"The most of people agree.", right:"Most people agree.", why:"'Most people' (general) vs 'most of the people' (specific group)."},
+{cat:"Articles", wrong:"He plays piano by the ear.", right:"He plays by ear.", why:"Fixed idiom contains zero article."},
+{cat:"Articles", wrong:"They did a research on it.", right:"They did research on it.", why:"Research is uncountable in English."},
+{cat:"Articles", wrong:"The nature is beautiful.", right:"Nature is beautiful.", why:"Generic 'nature' = Ø; but 'the nature of the problem'."},
+{cat:"Articles", wrong:"On the first sight it seemed fine.", right:"At first sight it seemed fine.", why:"Fixed phrase: at first sight."},
+{cat:"Articles", wrong:"In century XXI everything changed.", right:"In the twenty-first century everything changed.", why:"Ordinals require 'the'."},
+// Prepositions
+{cat:"Prepositions", wrong:"We discussed about it.", right:"We discussed it.", why:"'Discuss' is transitive — no preposition."},
+{cat:"Prepositions", wrong:"He emphasized on the risk.", right:"He emphasized the risk.", why:"Verb takes no prep; the noun form is 'emphasis on'."},
+{cat:"Prepositions", wrong:"She is married with a doctor.", right:"She is married to a doctor.", why:"Married TO — L1 transfer error."},
+{cat:"Prepositions", wrong:"Explain me the rule.", right:"Explain the rule to me.", why:"'Explain' cannot take an indirect object directly."},
+{cat:"Prepositions", wrong:"I was listening music.", right:"I was listening to music.", why:"'Listen' requires 'to'."},
+{cat:"Prepositions", wrong:"It depends of the weather.", right:"It depends on the weather.", why:"Depend ON."},
+{cat:"Prepositions", wrong:"I'm interested for science.", right:"I'm interested in science.", why:"Interested IN."},
+{cat:"Prepositions", wrong:"She is good in mathematics.", right:"She is good at mathematics.", why:"Good AT."},
+{cat:"Prepositions", wrong:"They did research about it.", right:"They did research on it.", why:"The standard collocation is 'research on/into'."},
+{cat:"Prepositions", wrong:"According to me, it's wrong.", right:"In my opinion, it's wrong.", why:"'According to' cannot refer to the speaker."},
+// Verb patterns
+{cat:"Verb patterns", wrong:"I suggest you to go.", right:"I suggest (that) you go. / I suggest going.", why:"'Suggest' doesn't take object + infinitive."},
+{cat:"Verb patterns", wrong:"I recommend to book early.", right:"I recommend booking early.", why:"'Recommend' + -ing or that-clause."},
+{cat:"Verb patterns", wrong:"I want that you come.", right:"I want you to come.", why:"'Want' takes object + to-infinitive, not a that-clause."},
+{cat:"Verb patterns", wrong:"She made me to go.", right:"She made me go.", why:"'Make' + bare infinitive (active)."},
+{cat:"Verb patterns", wrong:"Let me to help.", right:"Let me help.", why:"'Let' + bare infinitive."},
+{cat:"Verb patterns", wrong:"I enjoy to swim.", right:"I enjoy swimming.", why:"'Enjoy' + -ing."},
+{cat:"Verb patterns", wrong:"Avoid to make promises.", right:"Avoid making promises.", why:"'Avoid' + -ing."},
+{cat:"Verb patterns", wrong:"I look forward to see you.", right:"I look forward to seeing you.", why:"Here 'to' is a preposition, so -ing follows."},
+{cat:"Verb patterns", wrong:"I used to went there.", right:"I used to go there.", why:"'Used to' + base form; don't confuse with 'be used to -ing'."},
+{cat:"Verb patterns", wrong:"I can't help to worry.", right:"I can't help worrying.", why:"'Can't help' + -ing."},
+// Tense & mood
+{cat:"Tense & mood", wrong:"I am working here since 2020.", right:"I have been working here since 2020.", why:"Duration up to now = present perfect (continuous)."},
+{cat:"Tense & mood", wrong:"When I will arrive, I'll call you.", right:"When I arrive, I'll call you.", why:"Time clauses take present, not future."},
+{cat:"Tense & mood", wrong:"I would have liked to have gone.", right:"I would have liked to go.", why:"Avoid the double perfect."},
+{cat:"Tense & mood", wrong:"If I would have known, I'd have left.", right:"If I had known, I'd have left.", why:"No 'would' in the if-clause of conditionals."},
+{cat:"Tense & mood", wrong:"I wish I would have seen it.", right:"I wish I had seen it.", why:"'Wish' + past perfect for past regrets."},
+{cat:"Tense & mood", wrong:"It's time we will leave.", right:"It's time we left.", why:"'It's time' + past simple (unreal present)."},
+{cat:"Tense & mood", wrong:"I'd rather you don't smoke.", right:"I'd rather you didn't smoke.", why:"'Would rather' + past for other people's actions."},
+{cat:"Tense & mood", wrong:"Had I known, I would tell you.", right:"Had I known, I would have told you.", why:"Inverted 3rd conditional keeps past perfect + would have."},
+{cat:"Tense & mood", wrong:"I demand that he goes.", right:"I demand that he go.", why:"Mandative subjunctive: base form (formal) or 'should go'."},
+{cat:"Tense & mood", wrong:"If I was you, I'd wait. (formal writing)", right:"If I were you, I'd wait.", why:"'Were'-subjunctive is expected in formal registers."},
+// Inversion & focus
+{cat:"Inversion & focus", wrong:"Never I have seen such a view.", right:"Never have I seen such a view.", why:"Negative adverbials trigger subject–auxiliary inversion."},
+{cat:"Inversion & focus", wrong:"Not only he sings, but also dances.", right:"Not only does he sing, but he also dances.", why:"Inversion after fronted 'not only'."},
+{cat:"Inversion & focus", wrong:"Seldom we realize it.", right:"Seldom do we realize it.", why:"'Seldom' is a negative-frequency adverbial — invert."},
+{cat:"Inversion & focus", wrong:"Only when I left I realized it.", right:"Only when I left did I realize it.", why:"Inversion after 'only + adverbial'."},
+{cat:"Inversion & focus", wrong:"Under no circumstances you should sign.", right:"Under no circumstances should you sign.", why:"Negative limiting phrases require inversion."},
+{cat:"Inversion & focus", wrong:"What I need is a that I rest.", right:"What I need is a rest.", why:"Pseudo-cleft: What + clause + is + noun phrase."},
+{cat:"Inversion & focus", wrong:"It was yesterday when I saw her. (emphatic)", right:"It was yesterday that I saw her.", why:"It-clefts take 'that' (or 'who' for people)."},
+{cat:"Inversion & focus", wrong:"Hardly I had arrived when it started.", right:"Hardly had I arrived when it started.", why:"Inversion after 'hardly/scarcely'."},
+{cat:"Inversion & focus", wrong:"So tired I was that I slept.", right:"So tired was I that I slept.", why:"So/such fronting triggers inversion."},
+{cat:"Inversion & focus", wrong:"Little I knew what awaited.", right:"Little did I know what awaited.", why:"'Little' (negative meaning) triggers inversion."},
+// Relative clauses & participles
+{cat:"Clauses & participles", wrong:"The man which came was tall.", right:"The man who came was tall.", why:"Use 'who' for people in defining clauses."},
+{cat:"Clauses & participles", wrong:"My house, that I bought in 2010, is old.", right:"My house, which I bought in 2010, is old.", why:"Non-defining clauses use 'which', not 'that'."},
+{cat:"Clauses & participles", wrong:"The reason because I left is complex.", right:"The reason (that/why) I left is complex.", why:"'Reason because' is redundant."},
+{cat:"Clauses & participles", wrong:"The extent in which it matters is unclear.", right:"The extent to which it matters is unclear.", why:"Preposition-fronting must match the collocation: to which."},
+{cat:"Clauses & participles", wrong:"Walking down the street, the buildings impressed me.", right:"Walking down the street, I was impressed by the buildings.", why:"Dangling participle — the walker must be the subject."},
+{cat:"Clauses & participles", wrong:"Being a rainy day, we stayed in.", right:"It being a rainy day, we stayed in.", why:"Absolute phrase needs its own subject."},
+{cat:"Clauses & participles", wrong:"The people living there, they are friendly.", right:"The people living there are friendly.", why:"Don't double the subject."},
+{cat:"Clauses & participles", wrong:"Everything what I need is here.", right:"Everything (that) I need is here.", why:"'What' is not a relative pronoun."},
+{cat:"Clauses & participles", wrong:"A so called expert.", right:"A so-called expert.", why:"Compound modifier takes hyphens."},
+{cat:"Clauses & participles", wrong:"The girl who's father called.", right:"The girl whose father called.", why:"Whose = possessive; who's = who is."},
+// Collocation
+{cat:"Collocation", wrong:"She made a photo of us.", right:"She took a photo of us.", why:"Take a photo; make a mistake; do homework."},
+{cat:"Collocation", wrong:"I did a mistake.", right:"I made a mistake.", why:"'Make' collocates with mistake."},
+{cat:"Collocation", wrong:"Big snow blocked the road.", right:"Heavy snow blocked the road.", why:"Intensifier collocation: heavy snow/rain."},
+{cat:"Collocation", wrong:"He said a lie.", right:"He told a lie.", why:"Tell a lie / the truth / a story."},
+{cat:"Collocation", wrong:"It was an expensive price.", right:"It was a high price.", why:"Prices are high/low; items are expensive/cheap."},
+{cat:"Collocation", wrong:"They learned a lot of knowledge.", right:"They gained a lot of knowledge.", why:"Gain/acquire knowledge."},
+{cat:"Collocation", wrong:"He made a crime.", right:"He committed a crime.", why:"Commit a crime/offence/suicide."},
+{cat:"Collocation", wrong:"It's a strong car.", right:"It's a powerful car.", why:"Strong coffee/tea; powerful car/engine."},
+{cat:"Collocation", wrong:"An economical crisis.", right:"An economic crisis.", why:"Economic = of the economy; economical = thrifty."},
+{cat:"Collocation", wrong:"I'm very sensible to noise.", right:"I'm very sensitive to noise.", why:"Sensitive = easily affected; sensible = reasonable."},
+// False friends
+{cat:"False friends", wrong:"I actually live in Lisbon. (= currently)", right:"I currently live in Lisbon.", why:"Actually = in fact, not 'at present'."},
+{cat:"False friends", wrong:"Eventually we could go. (= possibly)", right:"Possibly we could go.", why:"Eventually = in the end."},
+{cat:"False friends", wrong:"She's very sympathetic. (= nice)", right:"She's very likeable. / She's very sympathetic. (= compassionate)", why:"Sympathetic = compassionate, not 'nice'."},
+{cat:"False friends", wrong:"I assisted to a meeting.", right:"I attended a meeting.", why:"Assist = help; attend = be present at."},
+{cat:"False friends", wrong:"I pretend to finish soon. (= intend)", right:"I intend to finish soon.", why:"Pretend = feign."},
+{cat:"False friends", wrong:"He is very comprehensive with me.", right:"He is very understanding with me.", why:"Comprehensive = complete; understanding = empathetic."},
+{cat:"False friends", wrong:"What succeeded next?", right:"What happened next?", why:"Succeed = do well / follow after."},
+{cat:"False friends", wrong:"I bought it at the library.", right:"I bought it at the bookshop.", why:"Library = borrow; bookshop/bookstore = buy."},
+{cat:"False friends", wrong:"To my deception, they lost.", right:"To my disappointment, they lost.", why:"Deception = deceit; disappointment = letdown."},
+{cat:"False friends", wrong:"Send me your resume of the article.", right:"Send me your summary of the article.", why:"Résumé/CV = career document; summary = abstract."},
+// Register & pragmatics
+{cat:"Register", wrong:"Firstly… Secondly… Lastly… (every essay)", right:"To begin with… / More importantly… / Finally…", why:"Mechanical sequencing reads as B2 scaffolding."},
+{cat:"Register", wrong:"A lot of research shows… (formal essay)", right:"A great deal of research shows…", why:"'A lot of' is informal; match the register."},
+{cat:"Register", wrong:"I'm kinda tired of this. (semi-formal talk)", right:"I'm somewhat tired of this.", why:"Reserve kinda/gonna for casual speech."},
+{cat:"Register", wrong:"As we all know, water is wet.", right:"It is widely accepted that…", why:"Cliché metadiscourse weakens openings."},
+{cat:"Register", wrong:"In conclusion, I would like to say that…", right:"To conclude… / On balance…", why:"Cut filler; start the conclusion itself."},
+{cat:"Register", wrong:"You are wrong about that.", right:"I'm not sure I'd put it that way…", why:"English disagreement defaults to hedging."},
+{cat:"Register", wrong:"—Is the sky blue? —Of course!", right:"—Is the sky blue? —Apparently so!", why:"'Of course!' to an obvious question can sound dismissive."},
+{cat:"Register", wrong:"Sorry to ask, but where is the station?", right:"Excuse me, where is the station?", why:"Over-apologizing transfers L1 politeness norms."},
+{cat:"Register", wrong:"How do you call it?", right:"What do you call it?", why:"English uses 'what' in this formula."},
+{cat:"Register", wrong:"I am agree with you.", right:"I agree with you.", why:"'Agree' is a verb, not an adjective."},
+// Mechanics
+{cat:"Mechanics", wrong:"It rained, we left.", right:"It rained, so we left.", why:"Comma splice — use a conjunction, semicolon or period."},
+{cat:"Mechanics", wrong:"Its raining.", right:"It's raining.", why:"It's = it is; its = possessive."},
+{cat:"Mechanics", wrong:"Who's book is this?", right:"Whose book is this?", why:"Whose = possessive."},
+{cat:"Mechanics", wrong:"The effect of the law will affect us.", right:"(as written — but:) The affect of the law… is wrong.", why:"Affect = verb (usually); effect = noun (usually)."},
+{cat:"Mechanics", wrong:"My compliment to the chef. (= completion)", right:"My complement to the chef is wrong; compliment = praise.", why:"Complement = completes; compliment = praise."},
+{cat:"Mechanics", wrong:"The principle reason is cost.", right:"The principal reason is cost.", why:"Principal = main; principle = rule."},
+{cat:"Mechanics", wrong:"Don't loose hope.", right:"Don't lose hope.", why:"Lose = misplace; loose = not tight."},
+{cat:"Mechanics", wrong:"Better then ever.", right:"Better than ever.", why:"Than = comparison; then = time."},
+{cat:"Mechanics", wrong:"I could of done it.", right:"I could have done it.", why:"Reduced 've is misheard as 'of'."},
+{cat:"Mechanics", wrong:"Definately / seperate / occured.", right:"Definitely / separate / occurred.", why:"High-frequency misspellings that cost exam marks."}
+];
+
+/* ---------------- QUIZ BANK (mixed, with explanations) ---------------- */
+const QUIZ_BANK = [
+{cat:"CEQ Exam", q:"On the Cambridge English Scale, what overall score is required to pass C1 Advanced at CEFR C1?", options:["160","180","200","142"], answer:1, expl:"180 is the C1 threshold (Grade C). 200+ earns Grade A, certifying C2 performance."},
+{cat:"CEQ Exam", q:"Which paper is unique to Cambridge exams and absent from IELTS and TOEFL?", options:["Listening","Use of English","Integrated writing","Speaking"], answer:1, expl:"Use of English directly tests collocation, word formation, phrasal verbs and grammatical transformations."},
+{cat:"CEQ Exam", q:"In the CAE/CPE Speaking test, the interlocutor's Global Achievement mark (0–5) is multiplied by:", options:["2","3","4","5"], answer:3, expl:"Assessor criteria are doubled; the Global mark is ×5, for 75 marks total."},
+{cat:"CEQ Exam", q:"Cambridge Listening recordings are played:", options:["Once","Twice","Three times","Twice, except Part 4"], answer:1, expl:"Twice — first pass for gist and stance, second for confirmation of the speaker's FINAL position."},
+{cat:"CEQ Exam", q:"C2 Proficiency Writing Part 1 requires candidates to:", options:["Describe a graph","Summarize and evaluate two texts and add their own ideas","Write an informal letter","Review a film"], answer:1, expl:"It's the operationalization of the CEFR C2 descriptor: reconstructing arguments from different sources coherently."},
+{cat:"CEQ Exam", q:"The biggest C1 writing failure identified by examiners is:", options:["Spelling errors","Short answers","Register inconsistency","Missing paragraphs"], answer:2, expl:"Mixing formal and colloquial signals that the writer doesn't own a register — it caps Communicative Achievement."},
+{cat:"CEQ Exam", q:"A Grade A on C1 Advanced (score 200–210) certifies performance at:", options:["B2","C1","C2","B2+"], answer:2, expl:"Grade A at C1 Advanced corresponds to CEFR C2 on the Cambridge English Scale."},
+{cat:"CEQ Exam", q:"Which statement about IELTS/TOEFL vs Cambridge validity is true?", options:["All expire after 2 years","Cambridge certificates have lifetime validity","TOEFL never expires","IELTS lasts 5 years"], answer:1, expl:"IELTS and TOEFL scores are valid 2 years; Cambridge qualifications do not expire."},
+{cat:"Vocabulary", q:"Approximately how many word families give ~98% coverage of unsimplified written text?", options:["2,000–3,000","5,000–6,000","8,000–9,000","15,000–20,000"], answer:2, expl:"Nation's corpus research: 8,000–9,000 families for novels/newspapers; ~6,000–7,000 for spoken discourse."},
+{cat:"Vocabulary", q:"The C1→C2 vocabulary growth zone is mainly which frequency band?", options:["First 1,000 words","2,000–4,000","4,000–9,000 (mid-frequency)","Beyond 20,000"], answer:2, expl:"The mid-frequency band holds the academic and precision lexis that separates C1 from C2."},
+{cat:"Vocabulary", q:"Which acquisition method has the strongest evidence for durable vocabulary retention?", options:["Rereading word lists","Retrieval practice with feedback","Highlighting","Watching videos without subtitles"], answer:1, expl:"Retrieval practice with corrective feedback robustly beats restudying, and the advantage grows over rounds."},
+{cat:"Vocabulary", q:"Cambridge defines lexical 'appropriacy' primarily through:", options:["Word rarity","Collocation","Word length","Latin origin"], answer:1, expl:"'Heavy snow', not 'big snow'. Inappropriate collocation loses marks even when meaning is clear."},
+{cat:"Grammar", q:"Choose the correct sentence:", options:["Had I known, I would tell you.","Had I known, I would have told you.","If I would have known, I'd have told you.","Had I known, I would had told you."], answer:1, expl:"Inverted third conditional: Had + subject + past participle … would have + participle."},
+{cat:"Grammar", q:"'Not only ___ late, but he also forgot the documents.'", options:["he was","was he","he is","did he be"], answer:1, expl:"Fronted 'not only' triggers subject–auxiliary inversion."},
+{cat:"Grammar", q:"'I look forward to ___ from you.'", options:["hear","hearing","heard","be hearing"], answer:1, expl:"Here 'to' is a preposition, so the gerund follows."},
+{cat:"Grammar", q:"Which modal best softens a claim at C2 level?", options:["It must be wrong.","It is wrong.","It might well be wrong.","It will be wrong."], answer:2, expl:"'Might well' is graded epistemic modality — hedged but confident, exactly the C2 nuance."},
+{cat:"Grammar", q:"'It's time we ___ .'", options:["leave","will leave","left","have left"], answer:2, expl:"'It's time' + past simple expresses an unreal present."},
+{cat:"Grammar", q:"Which is the correct formal subjunctive?", options:["I demand that he goes.","I demand that he go.","I demand him to go.","I demand that he will go."], answer:1, expl:"Mandative subjunctive uses the base form: 'that he go'."},
+{cat:"Grammar", q:"'___ did I realize what had happened.'", options:["Only then","Then only","Only","Then"], answer:0, expl:"'Only + adverbial' at the front requires inversion: Only then did I realize."},
+{cat:"Listening", q:"Which connected-speech processes cause the MOST comprehension difficulty in dictation studies?", options:["Assimilation & contraction","Intrusion, elision & reduction","Stress & rhythm","Linking & weak forms"], answer:1, expl:"Intrusion, elision and reduction are the least predictable, so they damage comprehension most."},
+{cat:"Listening", q:"The single most common perceptual cause of listening breakdown is:", options:["Unknown vocabulary","Lexical segmentation of the speech stream","Grammar complexity","Speed alone"], answer:1, expl:"Field's diagnosis: learners can't tell where one word ends and the next begins in connected speech."},
+{cat:"Listening", q:"Which humour type did advanced-intermediate L2 learners understand LEAST (Nasrullah et al. 2025)?", options:["Slapstick","Wordplay","Dark humour","Irony"], answer:2, expl:"Dark humour (~40%) and cultural references (~48%) were hardest; slapstick (~89%) easiest."},
+{cat:"Listening", q:"In Cambridge Listening, the correct answer usually tracks:", options:["The first statement made","The literal statement","The speaker's final stance after concessions","The loudest speaker"], answer:2, expl:"Distractors exploit literal early statements; answers follow the 'Although X, I must admit Y' pivot."},
+{cat:"Speaking", q:"The 4/3/2 technique primarily improves:", options:["Vocabulary range","Fluency (speed, fewer hesitations)","Grammatical complexity","Pronunciation of minimal pairs"], answer:1, expl:"Research shows clear fluency gains and proceduralization; complexity/accuracy gains are weak without feedback."},
+{cat:"Speaking", q:"Shadowing trains all of the following EXCEPT:", options:["Speech segmentation","Stress-pattern perception","Working-memory phonological coding","Formal writing style"], answer:3, expl:"Shadowing is a listening-speaking bridge; it does not target writing."},
+{cat:"Speaking", q:"Native hesitation differs from learner hesitation mainly because it:", options:["Is silent","Occurs at clause boundaries with conventional fillers","Is faster","Uses L1 words"], answer:1, expl:"Natives hesitate at clause boundaries with turn-holding fillers ('you know', 'I mean'); learners stall mid-clause."},
+{cat:"Speaking", q:"Which is a 'tail' (right-dislocation)?", options:["That guy from work, he quit.","Strange film, that.","You'll never guess what happened.","I mean, it's fine."], answer:1, expl:"A tail repeats the subject as a pronoun tag at the end: 'Strange film, that.'"},
+{cat:"Writing", q:"Corpus studies show expert academic prose is dense in:", options:["Verb-phrase bundles","Noun-phrase and prepositional-phrase bundles","Conversational frames","Imperatives"], answer:1, expl:"NP-of phrases and nominalizations mark expert prose; learner writing stays VP/conversational even at C1."},
+{cat:"Writing", q:"In IELTS Writing, Task 2 carries what weight relative to Task 1?", options:["Equal","Half","Double","Triple"], answer:2, expl:"Task 2 is weighted double — prioritize it in time allocation."},
+{cat:"Writing", q:"The given→new contract means:", options:["New information opens every sentence","Old information in theme position, new in rheme","Avoid all repetition of nouns","Every paragraph needs a new topic"], answer:1, expl:"Native information flow places known information first and new information at the end for emphasis."},
+{cat:"Methods", q:"Which practice schedule produces the best long-term retention?", options:["One long weekly session","Massed practice the night before","Short spaced sessions with retrieval","Rereading notes daily"], answer:2, expl:"Spacing + retrieval is the most replicated finding in learning science."},
+{cat:"Methods", q:"The optimal success rate for practice difficulty ('Goldilocks zone') is approximately:", options:["50%","70%","85%","99%"], answer:2, expl:"Around 85%: hard enough to force adaptation, easy enough to sustain motivation."},
+{cat:"Methods", q:"Extensive reading builds vocabulary fastest when text coverage is:", options:["80–85%","90%","95–98%","100% only"], answer:2, expl:"Below 95% coverage, unknown words overload working memory; 98% is optimal for unassisted reading."},
+{cat:"Methods", q:"The Output Hypothesis (Swain) claims production helps because it:", options:["Provides more input","Forces syntactic processing and noticing of gaps","Reduces anxiety","Replaces the need for feedback"], answer:1, expl:"Immersion students showed input alone leaves productive gaps; output triggers noticing, hypothesis testing, reflection."},
+{cat:"Methods", q:"Which study design produces the strongest evidence for a learning method?", options:["Anecdotal success stories","Single small case studies","Meta-analyses and replicated controlled experiments","Expert opinion"], answer:2, expl:"This app ranks methods by convergent evidence: retrieval practice and spacing sit at the top."},
+{cat:"Cognition", q:"L2 inner speech typically develops in which order?", options:["Imagined dialogues → replay → rehearsal → spontaneous thought","Replay of heard language → recall → rehearsal → imagined dialogues → spontaneous","Spontaneous thought → replay → rehearsal","Rehearsal → translation → fluency"], answer:1, expl:"De Guerrero's documented sequence starts with inward reproduction and ends in spontaneous L2 private thought."},
+{cat:"Cognition", q:"Translation dependence fades when:", options:["You translate faster","L2 words link to concepts and other L2 words, not L1 equivalents","You memorize more word lists","You stop reading"], answer:1, expl:"Dense L2-internal associations (definitions, collocations, images) let retrieval bypass the L1."},
+{cat:"Cognition", q:"Why does chunk acquisition improve fluency AND precision simultaneously?", options:["Chunks are shorter","Chunks are retrieved whole, bypassing working-memory-limited assembly","Chunks are always formal","Chunks avoid grammar"], answer:1, expl:"Whole-unit retrieval frees cognitive resources for content planning — the core of automaticity."}
+];
+
+/* ---------------- GRAMMAR TRAINER DRILLS ---------------- */
+const GRAMMAR_DRILLS = [
+{area:"Articles", prompt:"___ research suggests that sleep matters.", answer:"Ø (no article)", options:["The","A","Ø (no article)","An"], expl:"Generic uncountable 'research' takes zero article."},
+{area:"Articles", prompt:"He was sent to ___ prison for two years.", answer:"Ø (no article)", options:["the","a","Ø (no article)","that"], expl:"Institutional use: prison as a system = no article."},
+{area:"Articles", prompt:"___ nature of the problem is unclear.", answer:"The", options:["The","A","Ø (no article)","Some"], expl:"Specified by 'of the problem' → definite article."},
+{area:"Articles", prompt:"She gave me ___ useful piece of information.", answer:"a", options:["a","an","the","Ø (no article)"], expl:"'Information' is uncountable; count it via 'a piece of'."},
+{area:"Articles", prompt:"___ most people I know disagree.", answer:"Ø (no article) — with 'most'", options:["The","A","Ø (no article) — with 'most'","Such"], expl:"'Most people' (general) = no article."},
+{area:"Prepositions", prompt:"The committee consisted ___ five members.", answer:"of", options:["of","from","with","by"], expl:"Consist of."},
+{area:"Prepositions", prompt:"The results are consistent ___ earlier findings.", answer:"with", options:["with","to","of","on"], expl:"Consistent with."},
+{area:"Prepositions", prompt:"They attributed the failure ___ poor planning.", answer:"to", options:["to","for","on","at"], expl:"Attribute X to Y."},
+{area:"Prepositions", prompt:"The law prohibits drivers ___ using phones.", answer:"from", options:["from","to","of","against"], expl:"Prohibit someone from doing."},
+{area:"Prepositions", prompt:"Her argument hinges ___ one assumption.", answer:"on", options:["on","in","at","of"], expl:"Hinge on."},
+{area:"Inversion", prompt:"Scarcely ___ the meeting begun when the fire alarm rang.", answer:"had", options:["had","has","did","was"], expl:"Scarcely had + subject + past participle."},
+{area:"Inversion", prompt:"No sooner ___ I sat down than the phone rang.", answer:"had", options:["had","did","have","was"], expl:"No sooner had … than."},
+{area:"Inversion", prompt:"___ were the consequences that nobody dared speak.", answer:"Such", options:["Such","So","Very","Too"], expl:"Such + be + noun phrase = emphasis with inversion."},
+{area:"Inversion", prompt:"At no point ___ the minister admit fault.", answer:"did", options:["did","does","had","has"], expl:"Negative adverbial fronting → inversion with 'did'."},
+{area:"Inversion", prompt:"Only by practicing daily ___ you reach automaticity.", answer:"can", options:["can","you can","will you can","do"], expl:"'Only by…' triggers inversion: can you."},
+{area:"Conditionals", prompt:"___ it not for your help, I would have failed.", answer:"Were", options:["Were","Had","If","Should"], expl:"'Were it not for' = formal inversion of 'if it were not for'."},
+{area:"Conditionals", prompt:"Should you ___ any questions, contact me.", answer:"have", options:["have","had","having","will have"], expl:"'Should you have' = formal first conditional inversion."},
+{area:"Conditionals", prompt:"If she ___ (know) the truth then, she would have acted.", answer:"had known", options:["had known","knew","would know","would have known"], expl:"Third conditional: past perfect in the if-clause."},
+{area:"Conditionals", prompt:"If I ___ (be) taller, I'd play basketball. (formal)", answer:"were", options:["were","was","am","would be"], expl:"Formal 'were'-subjunctive for unreal present."},
+{area:"Conditionals", prompt:"But for your warning, we ___ (lose) everything.", answer:"would have lost", options:["would have lost","had lost","would lose","lost"], expl:"'But for' introduces a third-conditional meaning."},
+{area:"Modals & hedging", prompt:"Choose the most hedged claim:", answer:"The data would seem to suggest a trend.", options:["The data proves a trend.","The data shows a trend.","The data would seem to suggest a trend.","Clearly the data shows a trend."], expl:"'Would seem to suggest' stacks hedges — classic C2 academic caution."},
+{area:"Modals & hedging", prompt:"'You ___ have told me!' (reproach)", answer:"might", options:["might","must","will","shall"], expl:"'Might have' expresses gentle reproach."},
+{area:"Modals & hedging", prompt:"'It ___ well rain tomorrow.' (quite likely)", answer:"may/might", options:["may/might","shall","must","need"], expl:"'May/might well' = fairly probable."},
+{area:"Modals & hedging", prompt:"'You ___ hardly expect me to agree.'", answer:"can/could", options:["can/could","must","shall","need"], expl:"'Can/could hardly' = almost not possible to expect."},
+{area:"Modals & hedging", prompt:"'I ___ have thought you'd know that.' (mild criticism, BrE)", answer:"would", options:["would","should","must","will"], expl:"'Would have thought' expresses surprised expectation."},
+{area:"Clefts & emphasis", prompt:"___ surprised me was her calm.", answer:"What", options:["What","It","That","Which"], expl:"Pseudo-cleft: What + clause + was + focus."},
+{area:"Clefts & emphasis", prompt:"It was her calm ___ surprised me.", answer:"that", options:["that","what","which","when"], expl:"It-cleft with 'that'."},
+{area:"Clefts & emphasis", prompt:"All I want ___ some peace and quiet.", answer:"is", options:["is","are","be","were"], expl:"'All I want' takes a singular verb."},
+{area:"Clefts & emphasis", prompt:"The person ___ I spoke to was the manager.", answer:"(that/whom)", options:["(that/whom)","which","what","whose"], expl:"Object relative pronoun can be omitted; 'whom' is formal."},
+{area:"Clefts & emphasis", prompt:"___ I find fascinating is how fast children learn.", answer:"What", options:["What","It is","That","There"], expl:"Another pseudo-cleft opener for emphasis."},
+{area:"Verb patterns", prompt:"I object ___ being treated like a child.", answer:"to", options:["to","against","for","at"], expl:"Object to + -ing."},
+{area:"Verb patterns", prompt:"She insisted ___ paying for dinner.", answer:"on", options:["on","in","to","for"], expl:"Insist on + -ing."},
+{area:"Verb patterns", prompt:"He denied ___ the document.", answer:"having seen", options:["having seen","to see","see","seeing to"], expl:"Deny + -ing; perfect gerund for earlier action."},
+{area:"Verb patterns", prompt:"I can't afford ___ another mistake.", answer:"to make", options:["to make","making","make","made"], expl:"Afford + to-infinitive."},
+{area:"Verb patterns", prompt:"The report entails ___ the data twice.", answer:"checking", options:["checking","to check","check","checked"], expl:"Entail + -ing."},
+{area:"Subjunctive & formal", prompt:"It is essential that every candidate ___ present.", answer:"be", options:["be","is","will be","would be"], expl:"Mandative subjunctive after 'it is essential that'."},
+{area:"Subjunctive & formal", prompt:"We recommend that the policy ___ reviewed annually.", answer:"be", options:["be","is","was","will be"], expl:"Subjunctive after recommend that."},
+{area:"Subjunctive & formal", prompt:"___ the need arise, we shall act.", answer:"Should", options:["Should","If","Would","Had"], expl:"'Should the need arise' = formal conditional inversion."},
+{area:"Subjunctive & formal", prompt:"Far ___ it from me to criticize, but…", answer:"be", options:["be","is","was","being"], expl:"Fixed concessive formula: 'Far be it from me to…'."},
+{area:"Subjunctive & formal", prompt:"Suffice it ___ say that the plan failed.", answer:"to", options:["to","that","for","as"], expl:"Fixed formula: 'Suffice it to say'."},
+{area:"Discourse markers", prompt:"Choose a concessive marker: '___, the plan has merit; I just doubt its cost.'", answer:"That said", options:["That said","Firstly","Moreover","For example"], expl:"'That said' concedes then pivots — a C1+ discourse move."},
+{area:"Discourse markers", prompt:"'He claims to be an expert. ___, I've seen his work.' (skeptical)", answer:"Mind you", options:["Mind you","Therefore","Furthermore","Hence"], expl:"'Mind you' signals a qualification or caveat."},
+{area:"Discourse markers", prompt:"'The film was long — three hours, ___.'", answer:"no less", options:["no less","at least","anyway","though"], expl:"'No less' adds emphasis to a striking fact."},
+{area:"Discourse markers", prompt:"Choose the formal inferential marker: 'The results were inconsistent; ___, the theory needs revision.'", answer:"it follows that", options:["it follows that","so yeah","anyway","plus"], expl:"Formal inference marker appropriate for academic prose."},
+{area:"Discourse markers", prompt:"'___, I think we should wait. (returning to main point after digression)'", answer:"At any rate / In any case", options:["At any rate / In any case","Despite this","Such that","Whereby"], expl:"'At any rate' closes a digression and reasserts the main line."}
+];
+
+/* ---------------- VOCABULARY FLASHCARDS (C1–C2 mid-frequency) ---------------- */
+const FLASHCARDS = [
+{word:"ubiquitous", pos:"adj.", def:"present or found everywhere", example:"Smartphones have become ubiquitous in modern classrooms.", colloc:"ubiquitous presence, seemingly ubiquitous"},
+{word:"mitigate", pos:"v.", def:"to make something less severe or harmful", example:"Planting trees helps mitigate the effects of urban heat.", colloc:"mitigate the effects/impact/risk of"},
+{word:"alleviate", pos:"v.", def:"to reduce pain or difficulty", example:"The new policy should alleviate congestion in the city centre.", colloc:"alleviate poverty/stress/symptoms"},
+{word:"nuanced", pos:"adj.", def:"characterized by subtle distinctions", example:"Her essay offered a nuanced reading of the treaty.", colloc:"nuanced view/analysis/understanding"},
+{word:"pragmatic", pos:"adj.", def:"dealing with problems practically rather than ideologically", example:"We need a pragmatic solution, not a perfect one.", colloc:"pragmatic approach/solution/view"},
+{word:"scrutinize", pos:"v.", def:"to examine very carefully", example:"Every claim in the paper was scrutinized by reviewers.", colloc:"closely/carefully scrutinize"},
+{word:"compelling", pos:"adj.", def:"powerfully convincing or attention-grabbing", example:"She made a compelling case for reform.", colloc:"compelling evidence/argument/case"},
+{word:"ambiguous", pos:"adj.", def:"open to more than one interpretation", example:"The wording of the clause is deliberately ambiguous.", colloc:"remain/highly ambiguous"},
+{word:"meticulous", pos:"adj.", def:"showing great attention to detail", example:"He kept meticulous records of every experiment.", colloc:"meticulous attention to detail, meticulous planning"},
+{word:"resilient", pos:"adj.", def:"able to recover quickly from difficulty", example:"Children are often remarkably resilient.", colloc:"resilient economy/spirit, highly resilient"},
+{word:"plausible", pos:"adj.", def:"seeming reasonable or likely to be true", example:"The most plausible explanation is a measurement error.", colloc:"plausible explanation/theory, entirely plausible"},
+{word:"implicit", pos:"adj.", def:"implied though not directly expressed", example:"There was an implicit criticism in her tone.", colloc:"implicit meaning/assumption/criticism"},
+{word:"explicit", pos:"adj.", def:"stated clearly and in detail", example:"The rules are explicit about what is forbidden.", colloc:"explicit instructions/consent, make something explicit"},
+{word:"undermine", pos:"v.", def:"to gradually weaken or damage", example:"Constant interruptions undermine concentration.", colloc:"undermine confidence/authority/credibility"},
+{word:"bolster", pos:"v.", def:"to support or strengthen", example:"The findings bolster the case for early intervention.", colloc:"bolster the economy/argument/confidence"},
+{word:"concede", pos:"v.", def:"to admit something is true, often reluctantly", example:"He conceded that the plan had flaws.", colloc:"concede defeat/a point, reluctantly concede"},
+{word:"rebut", pos:"v.", def:"to argue against a claim with evidence", example:"The minister rebutted the accusations point by point.", colloc:"rebut allegations/charges, firmly rebut"},
+{word:"pervasive", pos:"adj.", def:"spreading widely throughout", example:"A pervasive sense of unease filled the room.", colloc:"pervasive influence/problem, increasingly pervasive"},
+{word:"tenuous", pos:"adj.", def:"very weak or slight", example:"The link between the two events is tenuous at best.", colloc:"tenuous link/connection/grasp"},
+{word:"rigorous", pos:"adj.", def:"extremely thorough and careful", example:"The study used rigorous experimental methods.", colloc:"rigorous analysis/testing/standards"},
+{word:"arbitrary", pos:"adj.", def:"based on whim rather than reason or system", example:"The division between the districts is largely arbitrary.", colloc:"arbitrary decision/distinction, seemingly arbitrary"},
+{word:"coherent", pos:"adj.", def:"logical and consistent; clearly organized", example:"She struggled to give a coherent account of events.", colloc:"coherent argument/narrative/strategy"},
+{word:"feasible", pos:"adj.", def:"possible and practical to do", example:"It's simply not feasible to finish by Friday.", colloc:"technically/economically feasible"},
+{word:"detrimental", pos:"adj.", def:"causing harm or damage", example:"Stress is detrimental to both memory and sleep.", colloc:"detrimental effect/impact, prove detrimental"},
+{word:"inadvertently", pos:"adv.", def:"unintentionally; by accident", example:"He inadvertently revealed the surprise.", colloc:"inadvertently cause/reveal/omit"},
+{word:"scrupulous", pos:"adj.", def:"very careful and attentive to what is right", example:"She was scrupulous about citing her sources.", colloc:"scrupulous honesty/care/attention"},
+{word:"candid", pos:"adj.", def:"truthful and straightforward; frank", example:"He gave a candid assessment of his own performance.", colloc:"candid interview/discussion, remarkably candid"},
+{word:"elaborate", pos:"v./adj.", def:"to explain in more detail; intricate", example:"Could you elaborate on that point?", colloc:"elaborate on/upon, elaborate plan"},
+{word:"succinct", pos:"adj.", def:"brief and clearly expressed", example:"Her summary was succinct and accurate.", colloc:"succinct summary/account, admirably succinct"},
+{word:"viable", pos:"adj.", def:"capable of working successfully", example:"Solar power is now a viable alternative.", colloc:"viable option/alternative/economically viable"},
+{word:"profound", pos:"adj.", def:"very great or intense; showing deep insight", example:"The war had a profound effect on a generation.", colloc:"profound impact/influence/implications"},
+{word:"exacerbate", pos:"v.", def:"to make a bad situation worse", example:"Cutting funding would only exacerbate the problem.", colloc:"exacerbate the problem/tensions, further exacerbate"},
+{word:"delineate", pos:"v.", def:"to describe or define precisely", example:"The contract delineates each party's responsibilities.", colloc:"clearly delineate, delineate boundaries"},
+{word:"postulate", pos:"v.", def:"to assume as a basis for reasoning", example:"The theory postulates a hidden variable.", colloc:"postulate the existence of"},
+{word:"conflate", pos:"v.", def:"to merge two distinct things into one, wrongly", example:"Don't conflate correlation with causation.", colloc:"conflate X with Y"},
+{word:"epitomize", pos:"v.", def:"to be a perfect example of", example:"Her career epitomizes dedication.", colloc:"epitomize the spirit/values of"},
+{word:"sporadic", pos:"adj.", def:"occurring irregularly, at scattered intervals", example:"Sporadic gunfire could be heard at dawn.", colloc:"sporadic outbreaks/violence, remain sporadic"},
+{word:"unprecedented", pos:"adj.", def:"never having happened before", example:"The crisis prompted unprecedented cooperation.", colloc:"unprecedented levels/scale, virtually unprecedented"},
+{word:"ominous", pos:"adj.", def:"suggesting that something bad will happen", example:"Ominous clouds gathered over the coast.", colloc:"ominous signs/silence, sound ominous"},
+{word:"mundane", pos:"adj.", def:"lacking interest; ordinary", example:"The job involves a lot of mundane tasks.", colloc:"mundane tasks/details, seemingly mundane"},
+{word:"astute", pos:"adj.", def:"clever and quick to understand situations", example:"An astute observer would have noticed the flaw.", colloc:"astute observation/investor/politician"},
+{word:"cogent", pos:"adj.", def:"clear, logical and convincing", example:"He presented a cogent argument for reform.", colloc:"cogent argument/reasoning, remarkably cogent"},
+{word:"fallacy", pos:"n.", def:"a mistaken belief or flawed reasoning", example:"The idea that money buys happiness is a fallacy.", colloc:"common/logical fallacy, perpetuate a fallacy"},
+{word:"paradigm", pos:"n.", def:"a typical model or framework of thought", example:"The discovery forced a shift in the scientific paradigm.", colloc:"dominant/new paradigm, paradigm shift"},
+{word:"anomaly", pos:"n.", def:"something that deviates from the norm", example:"The warm winter was a statistical anomaly.", colloc:"apparent/statistical anomaly"},
+{word:"juxtapose", pos:"v.", def:"to place side by side for contrast", example:"The exhibition juxtaposes old and new photographs.", colloc:"juxtapose X with/against Y"},
+{word:"prolific", pos:"adj.", def:"producing a great deal of work", example:"She was a prolific writer of short stories.", colloc:"prolific author/scorer, highly prolific"},
+{word:"eloquent", pos:"adj.", def:"fluent and persuasive in expression", example:"He delivered an eloquent defence of free speech.", colloc:"eloquent speech/testimony, eloquent about"},
+{word:"adamant", pos:"adj.", def:"refusing to change one's mind", example:"She was adamant that the meeting be postponed.", colloc:"remain adamant, adamant that/opposed to"},
+{word:"meticulously", pos:"adv.", def:"in a way that shows great attention to detail", example:"The scene was meticulously reconstructed.", colloc:"meticulously planned/researched"},
+{word:"dubious", pos:"adj.", def:"doubtful; of questionable quality", example:"The claim rests on dubious evidence.", colloc:"dubious distinction/honour, highly dubious"},
+{word:"pragmatically", pos:"adv.", def:"in a practical rather than idealistic way", example:"Pragmatically, we should start small.", colloc:"approach something pragmatically"},
+{word:"empirical", pos:"adj.", def:"based on observation or experiment", example:"There is little empirical support for the claim.", colloc:"empirical evidence/research/data"},
+{word:"hypothetical", pos:"adj.", def:"based on a supposed situation; not real", example:"Let's consider a hypothetical scenario.", colloc:"purely hypothetical, hypothetical question"},
+{word:"discrepancy", pos:"n.", def:"a difference between things that should match", example:"There is a discrepancy between the two reports.", colloc:"discrepancy between/in, apparent discrepancy"},
+{word:"ramification", pos:"n.", def:"a consequence of an action, often unwelcome", example:"The decision has serious legal ramifications.", colloc:"legal/political ramifications, wider ramifications"},
+{word:"quintessential", pos:"adj.", def:"the most perfect typical example", example:"Paris is the quintessential romantic city.", colloc:"the quintessential X"},
+{word:"juxtaposition", pos:"n.", def:"the fact of placing things close for contrast", example:"The juxtaposition of wealth and poverty is stark.", colloc:"stark/striking juxtaposition"},
+{word:"ambivalent", pos:"adj.", def:"having mixed feelings about something", example:"Voters remain ambivalent about the reform.", colloc:"ambivalent about/towards, deeply ambivalent"},
+{word:"discern", pos:"v.", def:"to perceive or recognize something not obvious", example:"It was hard to discern any pattern in the data.", colloc:"discern a pattern/difference, barely discernible"},
+{word:"unfettered", pos:"adj.", def:"free from restrictions", example:"The press should remain unfettered.", colloc:"unfettered access/power/capitalism"},
+{word:"incongruous", pos:"adj.", def:"strange or out of place in a context", example:"A skyscraper would look incongruous in the old town.", colloc:"seem/appear incongruous"},
+{word:"prudent", pos:"adj.", def:"acting with care for the future; wise", example:"It would be prudent to save some of the budget.", colloc:"prudent to (do), prudent management, deem it prudent"}
+];
+
+/* ---------------- COLLOCATION EXERCISES ---------------- */
+const COLLOCATIONS = [
+{prompt:"The evidence ___ a compelling case for reform.", options:["makes","does","builds","gives"], answer:0, expl:"'Make a case for' — the standard collocation."},
+{prompt:"We need to ___ into account the hidden costs.", options:["take","make","put","bring"], answer:0, expl:"Take into account (also: take into consideration)."},
+{prompt:"The new law will ___ into force next year.", options:["come","go","get","fall"], answer:0, expl:"Come into force."},
+{prompt:"She ___ a crucial role in the negotiations.", options:["played","made","did","acted"], answer:0, expl:"Play a role."},
+{prompt:"The results ___ serious doubts about the theory.", options:["raise","rise","arise","lift"], answer:0, expl:"Raise doubts/questions/concerns."},
+{prompt:"His speech ___ a deep impression on the audience.", options:["made","did","left","gave"], answer:0, expl:"Make an impression (also: leave a lasting impression)."},
+{prompt:"The committee ___ a unanimous decision.", options:["reached","arrived","got","made to"], answer:0, expl:"Reach a decision (also: arrive at a decision)."},
+{prompt:"We must ___ priority to safety.", options:["give","make","do","take"], answer:0, expl:"Give priority to."},
+{prompt:"The scandal ___ widespread public outrage.", options:["sparked","lit","fired","opened"], answer:0, expl:"Spark outrage/controversy/debate."},
+{prompt:"The government has ___ measures to curb inflation.", options:["taken","made","done","put"], answer:0, expl:"Take measures/steps/action."},
+{prompt:"Research ___ light on how memory works.", options:["sheds","throws down","pours","drops"], answer:0, expl:"Shed/throw/cast light on."},
+{prompt:"The findings ___ far-reaching implications.", options:["have","make","do","take"], answer:0, expl:"Have implications/consequences."},
+{prompt:"The project failed to ___ expectations.", options:["live up to","stand up to","catch up with","face up to"], answer:0, expl:"Live up to expectations."},
+{prompt:"She ___ great emphasis on accuracy.", options:["lays","lies","sets","gives out"], answer:0, expl:"Lay/place emphasis on."},
+{prompt:"The data ___ support for the hypothesis.", options:["lends","borrows","loans out","rents"], answer:0, expl:"Lend support/credence to."},
+{prompt:"Critics ___ holes in the argument.", options:["punched","hit","beat","struck down"], answer:0, expl:"Punch holes in an argument (informal idiom)."},
+{prompt:"The minister ___ responsibility for the failure.", options:["accepted","made","did","got"], answer:0, expl:"Accept/bear/take responsibility."},
+{prompt:"This theory ___ weight to earlier findings.", options:["adds","puts","gives out","sums"], answer:0, expl:"Add weight to."},
+{prompt:"The company ___ record profits last year.", options:["posted","mailed","stamped","sent"], answer:0, expl:"Post/record/report profits."},
+{prompt:"We should ___ a distinction between the two cases.", options:["draw","paint","sketch out","pull"], answer:0, expl:"Draw a distinction/conclusion/parallel."},
+{prompt:"The news ___ as a shock to everyone.", options:["came","went","felt","made"], answer:0, expl:"Come as a shock/surprise/relief."},
+{prompt:"He ___ a promise he couldn't keep.", options:["made","did","said","told"], answer:0, expl:"Make a promise; keep/break a promise."},
+{prompt:"The two issues are ___ linked.", options:["inextricably","unseparably","unbreakably","undividedly"], answer:0, expl:"Inextricably linked/intertwined."},
+{prompt:"She has a ___ interest in architecture.", options:["keen","strong coffee","hard","sharp"], answer:0, expl:"Keen/deep/strong interest in."},
+{prompt:"The proposal ___ fierce criticism.", options:["attracted","pulled","dragged","collected"], answer:0, expl:"Attract criticism/attention."},
+{prompt:"It ___ without saying that safety comes first.", options:["goes","comes","runs","stands"], answer:0, expl:"It goes without saying."},
+{prompt:"The economy shows ___ signs of recovery.", options:["tentative","tempting","temporary","temperate"], answer:0, expl:"Tentative signs/steps/conclusions."},
+{prompt:"They ___ a heated debate about the proposal.", options:["engaged in","involved","partook","entered to"], answer:0, expl:"Engage in debate/discussion."},
+{prompt:"The decision ___ a dangerous precedent.", options:["sets","puts","lays","places"], answer:0, expl:"Set a precedent/example."},
+{prompt:"I strongly ___ to being recorded.", options:["object","oppose","against","refuse"], answer:0, expl:"Object to (+ -ing/noun)."}
+];
+
+/* ---------------- IDIOMS & PHRASAL VERBS ---------------- */
+const IDIOMS = [
+{item:"to read between the lines", type:"idiom", meaning:"to understand an implied, unstated meaning", example:"Reading between the lines, the letter was a polite rejection.", register:"neutral"},
+{item:"to be on the same page", type:"idiom", meaning:"to share the same understanding or position", example:"Before we negotiate, let's make sure we're on the same page.", register:"neutral"},
+{item:"to play devil's advocate", type:"idiom", meaning:"to argue the opposite side to test an idea", example:"Let me play devil's advocate — what if the data is wrong?", register:"neutral"},
+{item:"the elephant in the room", type:"idiom", meaning:"an obvious problem nobody mentions", example:"The funding gap was the elephant in the room all evening.", register:"neutral"},
+{item:"to sit on the fence", type:"idiom", meaning:"to avoid taking a side", example:"You can't sit on the fence forever — decide.", register:"informal"},
+{item:"to go the extra mile", type:"idiom", meaning:"to make more effort than required", example:"She always goes the extra mile for her students.", register:"neutral"},
+{item:"to miss the boat", type:"idiom", meaning:"to be too late to take an opportunity", example:"Prices doubled — I missed the boat on that investment.", register:"informal"},
+{item:"to cut corners", type:"idiom", meaning:"to do something cheaply or carelessly to save time/money", example:"The builder cut corners, and the roof leaked within a year.", register:"informal"},
+{item:"a blessing in disguise", type:"idiom", meaning:"a misfortune that turns out beneficial", example:"Losing that job was a blessing in disguise.", register:"neutral"},
+{item:"to take with a grain of salt", type:"idiom", meaning:"to view a claim skeptically", example:"Take his forecasts with a grain of salt.", register:"informal (AmE); BrE: pinch of salt"},
+{item:"to burn the midnight oil", type:"idiom", meaning:"to work late into the night", example:"She burned the midnight oil to finish the thesis.", register:"neutral"},
+{item:"to beat around the bush", type:"idiom", meaning:"to avoid the main point", example:"Stop beating around the bush — what do you want?", register:"informal"},
+{item:"by and large", type:"idiom", meaning:"on the whole; generally", example:"By and large, the reforms have worked.", register:"neutral-formal"},
+{item:"to all intents and purposes", type:"idiom", meaning:"in every practical sense; virtually", example:"The project is, to all intents and purposes, complete.", register:"formal"},
+{item:"a foregone conclusion", type:"idiom", meaning:"an inevitable result", example:"His re-election is a foregone conclusion.", register:"neutral"},
+{item:"to rule out", type:"phrasal verb", meaning:"to exclude as impossible", example:"We can't rule out a technical fault.", register:"neutral"},
+{item:"to iron out", type:"phrasal verb", meaning:"to resolve small problems", example:"We're still ironing out the details.", register:"neutral"},
+{item:"to flesh out", type:"phrasal verb", meaning:"to add detail to something incomplete", example:"Can you flesh out this outline into a full proposal?", register:"neutral"},
+{item:"to zero in on", type:"phrasal verb", meaning:"to focus closely on", example:"The report zeroes in on the root causes.", register:"neutral"},
+{item:"to boil down to", type:"phrasal verb", meaning:"to have as the essential point", example:"It all boils down to trust.", register:"neutral"},
+{item:"to weed out", type:"phrasal verb", meaning:"to remove unwanted elements", example:"The test is designed to weed out unqualified candidates.", register:"neutral"},
+{item:"to hinge on", type:"phrasal verb", meaning:"to depend entirely on", example:"The whole case hinges on one witness.", register:"neutral"},
+{item:"to shrug off", type:"phrasal verb", meaning:"to dismiss as unimportant", example:"She shrugged off the criticism.", register:"neutral"},
+{item:"to live up to", type:"phrasal verb", meaning:"to meet expectations", example:"The sequel didn't live up to the hype.", register:"neutral"},
+{item:"to pare down", type:"phrasal verb", meaning:"to reduce gradually in size", example:"We pared the budget down to the essentials.", register:"neutral"},
+{item:"to cotton on", type:"phrasal verb", meaning:"to begin to understand", example:"It took him a while to cotton on to the joke.", register:"informal (BrE)"},
+{item:"to gloss over", type:"phrasal verb", meaning:"to treat a problem superficially to avoid embarrassment", example:"The report glosses over the safety failures.", register:"neutral"},
+{item:"to spell out", type:"phrasal verb", meaning:"to explain in clear detail", example:"Do I have to spell it out for you?", register:"neutral"},
+{item:"to play down", type:"phrasal verb", meaning:"to make something seem less important", example:"The government played down the risks.", register:"neutral"},
+{item:"to single out", type:"phrasal verb", meaning:"to select from a group for attention", example:"She was singled out for praise.", register:"neutral"}
+];
+
+/* ---------------- PRONUNCIATION & SHADOWING ---------------- */
+const CONNECTED_SPEECH = [
+{feature:"Linking (consonant→vowel)", written:"an apple / turn it off", sounds:"/əˈnæpəl/ · /tɜːrnɪtɒf/", note:"The final consonant attaches to the next word."},
+{feature:"Assimilation", written:"did you / would you / ten bikes", sounds:"/ˈdɪdʒə/ · /ˈwʊdʒə/ · /tem baɪks/", note:"Sounds change to match neighbours: /d+j/→/dʒ/, /n+b/→/m/."},
+{feature:"Elision", written:"next day / last night / friendship", sounds:"/neks deɪ/ · /lɑːs naɪt/ · /frenʃɪp/", note:"A sound disappears entirely — the biggest cause of listening breakdown."},
+{feature:"Intrusion", written:"law and order / go on / I agree", sounds:"/lɔːrənˈɔːdə/ · /ɡəʊwɒn/ · /aɪjəɡriː/", note:"A linking /r/, /w/ or /j/ is inserted between vowels."},
+{feature:"Weak forms", written:"to / of / a / can / was / and", sounds:"/tə/ · /əv/ · /ə/ · /kən/ · /wəz/ · /ən/", note:"Function words reduce to schwa in fluent speech."},
+{feature:"Contractions & reductions", written:"going to / want to / could have", sounds:"gonna · wanna · coulda (/kʊdəv/)", note:"Why 'could of' is a classic spelling error."},
+{feature:"Catenation", written:"pick it up / get out", sounds:"/pɪkɪtʌp/ · /ɡet aʊt/", note:"Final consonant links to the initial vowel of the next word."}
+];
+
+const SHADOW_SCRIPTS = [
+{title:"Panel discussion (BrE, moderate)", level:"Intermediate", text:"I mean, the thing is, we've been talking about this for years, haven't we? And to be fair, some progress has been made. But if you ask me — and, well, people do ask — the real issue isn't money, it's willpower. Political willpower, that is.",
+ focus:"Weak forms (to/and/the), tag question intonation, filler chunks."},
+{title:"University lecture excerpt", level:"Advanced", text:"What I'd like to suggest — and this is, admittedly, somewhat speculative — is that memory isn't a recording device at all. It's a reconstruction. Every time you remember something, you're essentially rebuilding it, which is precisely why eyewitness testimony turns out to be so unreliable.",
+ focus:"Sentence stress on new information, parenthetical hedges, linking."},
+{title:"Conversational anecdote (AmE, fast)", level:"Elite", text:"So there I was, right, standing in line at the airport, and this guy next to me goes, 'Didn't you use to live in Boston?' And I'm like, 'Yeah, twenty years ago, why?' Turns out we were roommates in college. Total coincidence. Small world, huh?",
+ focus:"Quotative 'goes/I'm like', contractions, tail intonation."}
+];
+
+const STRESS_DRILLS = [
+{family:"PHOtograph → phoTOgraphy → photoGRAphic", rule:"Stress shifts in derived forms."},
+{family:"ECONomy → ecoNOMic → econoMETrics", rule:"Suffixes pull stress toward themselves."},
+{family:"ANalyse → aNALysis → anaLYTical", rule:"-y/-ic/-ical suffixes move stress."},
+{family:"PREsent (n/adj) → preSENT (v)", rule:"Two-syllable noun/verb pairs: nouns stress the first syllable, verbs the second (REcord/reCORD, IMport/imPORT)."},
+{family:"COMpound nouns vs adjective+noun", rule:"a BLACKbird (species) vs a black BIRD (any bird that is black)."}
+];
+
+/* ---------------- SPEAKING PROMPTS (with timers) ---------------- */
+const SPEAKING_PROMPTS = [
+{part:"CEQ Part 2 — Long turn (1 min)", seconds:60, prompt:"Compare two experiences of learning something difficult and say which taught you more and why.", tips:"Speculate about both, compare explicitly, end with a clear preference. Use: 'What they have in common is… whereas…'."},
+{part:"CEQ Part 2 — Long turn (1 min)", seconds:60, prompt:"Compare living in a big city with living in the countryside, and say which suits ambitious people better.", tips:"Avoid listing; organize as similarity → contrast → judgment."},
+{part:"CEQ Part 3 — Collaborative task (3 min)", seconds:180, prompt:"With a partner: a school has funding for ONE project — a coding lab, a theatre programme, a sports facility, a mental-health service. Discuss and reach a decision together.", tips:"Score comes from INTERACTION: invite opinions ('What's your take on…?'), concede ('Fair point, although…'), negotiate toward an outcome."},
+{part:"CEQ Part 3 — Collaborative task (3 min)", seconds:180, prompt:"With a partner: which factors matter most when choosing a career — salary, passion, security, prestige, work-life balance? Agree on the top two.", tips:"Widen the scope before narrowing: define criteria first, then rank."},
+{part:"CEQ Part 4 — Discussion (abstract)", seconds:120, prompt:"Do you think technology is making us better or worse at remembering things? Develop your answer with reasons.", tips:"C2-level answers hedge ('I'd argue it depends on…'), concede the counter-case, then commit."},
+{part:"CEQ Part 4 — Discussion (abstract)", seconds:120, prompt:"Some people say formal education kills creativity. To what extent do you agree?", tips:"Use mixed conditionals and concession: 'While I accept that…, I'd still maintain…'."},
+{part:"TOEFL-style — Interview response (45 s)", seconds:45, prompt:"Describe a skill you believe everyone should learn, and explain why.", tips:"One clear point + one concrete example. The engine scores rate, pauses and hesitations — keep a steady pace."},
+{part:"TOEFL-style — Interview response (45 s)", seconds:45, prompt:"Do you prefer planning everything in advance or being spontaneous? Why?", tips:"Answer in the first sentence; don't narrate the question back."},
+{part:"IELTS Part 2 — Cue card (2 min)", seconds:120, prompt:"Describe a book or film that changed how you think. Say what it was, when you encountered it, and how it changed you.", tips:"Follow the given→new flow: context → content → transformation → reflection."},
+{part:"IELTS Part 3 — Discussion", seconds:90, prompt:"Why do some people resist new ideas even when the evidence is strong?", tips:"Generalize beyond yourself; use hedged speculation ('It may well be that…')."},
+{part:"4/3/2 fluency drill", seconds:240, prompt:"Tell a complete anecdote about a time you overcame a difficulty. You will retell it in 3, then 2 minutes.", tips:"Same content each round, shrinking time. Measure words per minute and hesitations across rounds."},
+{part:"Elite — Impromptu abstract talk (2 min)", seconds:120, prompt:"'Progress is just movement in a direction we currently approve of.' Discuss.", tips:"Define the term, test the definition against examples, reach a qualified conclusion."}
+];
+
+/* ---------------- WRITING STUDIO ---------------- */
+const WRITING_TASKS = [
+{type:"C1 Advanced Essay (Part 1)", words:"220–260 words", minutes:45, task:"Your class has discussed whether traditional news media still matters. Write an essay giving your opinion, addressing TWO of these points: reliability of information, speed of reporting, depth of analysis."},
+{type:"C2 Proficiency Essay (Part 1)", words:"240–280 words", minutes:45, task:"Read the two short texts below (summarize them yourself from any two opinion pieces you choose), then write an essay summarizing and evaluating their key points and adding your own ideas about whether expertise is valued less than it used to be."},
+{type:"Report", words:"220–260 words", minutes:45, task:"You volunteer at a local library. The manager asks for a report on how younger visitors use the library and recommendations for attracting more of them. Write your report with headings."},
+{type:"Review", words:"220–260 words", minutes:45, task:"A website asks for reviews of podcasts that help people learn. Review a podcast you know, evaluating its content, style and usefulness, and give a recommendation."},
+{type:"IELTS Task 2", words:"250+ words", minutes:40, task:"Some believe success in life depends mainly on hard work, others on factors like wealth or appearance. Discuss both views and give your own opinion."},
+{type:"Formal proposal", words:"220–260 words", minutes:45, task:"Your city council wants ideas to make the city centre more attractive to pedestrians. Write a proposal outlining two measures, their benefits and possible objections."}
+];
+
+const WRITING_CHECKLIST = [
+"Every element of the task/rubric is explicitly addressed (no missed bullets).",
+"One register is held consistently from first line to last.",
+"The genre conventions are visible (headings for report, recommendation in review, clear thesis in essay).",
+"Each paragraph does ONE job (topic sentence → development → mini-conclusion).",
+"At least 5 different linking devices — none of them 'Firstly/Secondly'.",
+"At least 3 marked C1+ structures: inversion, cleft, participle clause, mixed conditional.",
+"Collocations are natural (no 'do a mistake', 'make a photo').",
+"Articles and prepositions checked line by line in the final 5 minutes.",
+"Sentence lengths vary deliberately (at least one short punchy sentence per page).",
+"Word count within range; conclusion adds a judgment, not a repetition."
+];
+
+/* ---------------- READING LAB ---------------- */
+const READING_PASSAGES = [
+{title:"The Illusion of Explanatory Depth", level:"C1", text:"Most people believe they understand how everyday objects work — a zipper, a toilet, a bicycle. Yet when asked to produce a step-by-step explanation, they falter. Psychologists call this the illusion of explanatory depth: we mistake recognition for understanding, familiarity for knowledge. The effect is robust and humbling. In a series of experiments, participants rated their understanding of common devices, then attempted to explain their mechanisms, then re-rated themselves. Ratings reliably collapsed after the explanation attempt. Curiously, the cure for overconfidence was not humiliation but engagement: having tried and failed to explain, people became more moderate and more curious, not less willing to learn.\n\nThe phenomenon extends beyond objects to policies. Advocates of a political position, when asked to articulate the mechanistic details of how their preferred policy would achieve its ends, frequently soften their extremity. Explanation, it seems, is a mirror: it shows us the gaps that fluency conceals. There is a lesson here for anyone who wishes to think clearly — articulation is not the packaging of thought but its test.",
+questions:[
+{q:"The 'illusion of explanatory depth' refers to:", options:["The difficulty of explaining complex machines","Overestimating one's understanding of familiar things","Forgetting how objects work over time","Experts explaining things badly"], answer:1, expl:"We mistake recognition for understanding until forced to explain."},
+{q:"After failing to explain a mechanism, participants generally became:", options:["Embarrassed and disengaged","More extreme in their views","More moderate and curious","Convinced they were right"], answer:2, expl:"The attempted explanation moderated judgments and increased curiosity."},
+{q:"The author compares explanation to a mirror because it:", options:["Reflects society's values","Reveals hidden gaps in knowledge","Duplicates what we already know","Distorts reality"], answer:1, expl:"'Explanation … shows us the gaps that fluency conceals.'"}
+]},
+{title:"Hedging as Honesty", level:"C2", text:"To the untrained ear, academic prose can sound evasive. Claims arrive dressed in qualifiers: results suggest, the evidence is consistent with, it would appear. This is not timidity. It is calibration — an attempt to make the strength of words match the strength of evidence. A finding from a single small study warrants suggest, not prove; a meta-analysis of forty experiments earns a firmer verb. The skilled reader learns to decode this epistemic grammar, reading certainty off the modals the way a sailor reads weather off the clouds.\n\nNor is hedging confined to scholarship. In British conversation, understatement performs analogous work: not bad may mean excellent, a bit of a problem may signal catastrophe. To misread these calibrations is to misjudge the speaker entirely. Fluency, at its highest level, is less a matter of what one can say than of knowing precisely how strongly one should say it.",
+questions:[
+{q:"According to the passage, academic hedging is best understood as:", options:["Evasive writing habits","Matching linguistic strength to evidential strength","A requirement of journal editors","Unnecessary caution"], answer:1, expl:"Hedging is 'calibration' — words matched to evidence strength."},
+{q:"The comparison to a sailor reading clouds illustrates:", options:["How unpredictable research is","That hedges encode readable degrees of certainty","The difficulty of academic English","British weather"], answer:1, expl:"The analogy decodes modals as indicators of epistemic strength."},
+{q:"The author concludes that advanced fluency consists mainly in:", options:["A large vocabulary","Grammatical accuracy","Knowing how strongly to phrase a claim","Speaking quickly"], answer:2, expl:"'…knowing precisely how strongly one should say it.'"}
+]}
+];
+
+/* ---------------- LISTENING TRACKER CONTENT ---------------- */
+const LISTENING_PLAN = [
+{goal:"Bottom-up decoding", activity:"Dictation: 60–90s authentic clip, transcribe, verify against transcript", freq:"Daily, 15 min", tracks:"dictation"},
+{goal:"Prosody & segmentation", activity:"Shadowing session (pre-shadow → study → post-shadow)", freq:"Daily, 10–15 min", tracks:"shadowing"},
+{goal:"Accent flexibility", activity:"Rotate accents weekly: BrE → AmE → AusE → Irish → non-native Englishes", freq:"Weekly rotation, 30 min/day", tracks:"accent"},
+{goal:"Connected speech", activity:"Study one reduction pattern, then hunt for it in a podcast", freq:"3× per week", tracks:"connected"},
+{goal:"Pragmatic inference", activity:"Comedy/panel-show decoding: log sarcasm, implication, cultural references", freq:"2× per week, 20 min", tracks:"pragmatics"},
+{goal:"Exam listening", activity:"Cambridge-style practice: first pass gist, second pass confirm final stance", freq:"Weekly", tracks:"exam"}
+];
+
+const LISTENING_RESOURCES = [
+{name:"BBC Radio 4 — In Our Time", kind:"Podcast (BrE)", note:"Dense intellectual discussion; ideal for dictation and note-taking."},
+{name:"The Economist Podcasts", kind:"Podcast (BrE)", note:"Clear educated speech, current-affairs lexis, ideal for shadowing."},
+{name:"NPR — This American Life", kind:"Podcast (AmE)", note:"Narrative storytelling; great for anecdote schema and quotatives."},
+{name:"QI / Would I Lie to You?", kind:"Panel show (BrE)", note:"Banter, irony, sarcasm prosody — pragmatic inference training."},
+{name:"TED / TEDx Talks", kind:"Talks (multi-accent)", note:"Transcripts available; perfect for read-while-listening."},
+{name:"Luke's English Podcast", kind:"Learner-native bridge (BrE)", note:"Comedy + explicit discussion of natural speech."},
+{name:"ABC Conversations", kind:"Podcast (AusE)", note:"Long interviews; accent-flexibility training."},
+{name:"Stand-up specials with subtitles", kind:"Comedy (mixed)", note:"Cultural references + timing; use the decode-the-joke method."}
+];
+
+/* ---------------- NATIVE VS LEARNER COMPARISONS ---------------- */
+const COMPARISONS = [
+{topic:"Disagreeing", learner:"I disagree with you. You are wrong about the statistics.", native:"Hmm, I'm not sure I'd read the figures that way — if anything, they seem to point the other way.", note:"Natives hedge + pivot instead of blunt contradiction."},
+{topic:"Opening a story", learner:"Yesterday something interesting happened to me. I will tell you about it.", native:"You'll never guess what happened to me yesterday. So there I was, right…", note:"Natives use the abstract + orientation schema with conventional openers."},
+{topic:"Asking for help", learner:"I want you to help me with this problem.", native:"Sorry to bother you — any chance you could give me a hand with this?", note:"Apology frame + indirect question + informal chunk."},
+{topic:"Expressing uncertainty", learner:"I don't know. Maybe it is true, maybe not.", native:"I'm honestly not sure — I mean, it could well be, but I wouldn't bet on it.", note:"Hedge stack: filler + graded modal + idiomatic evaluation."},
+{topic:"Ending a conversation", learner:"Goodbye. I must go now.", native:"Right, I'd better let you go — lovely talking to you. Let's catch up soon, yeah?", note:"Pre-closing signal + appreciation + soft future plan."},
+{topic:"Giving an opinion", learner:"In my opinion, the film was good. I liked it very much.", native:"I thought it was brilliant, actually — not perfect, mind you, but well worth seeing.", note:"'Actually' softens assertion; 'mind you' adds a live qualification."},
+{topic:"Complaining", learner:"The service was bad and I am angry about it.", native:"The service left a bit to be desired, to be honest — we waited nearly an hour.", note:"Understatement ('left a bit to be desired') + concrete evidence."},
+{topic:"Agreeing strongly", learner:"Yes, I agree one hundred percent with you.", native:"Absolutely — you've hit the nail on the head there.", note:"Idiomatic agreement beats numeric intensifiers."},
+{topic:"Describing quantity (informal)", learner:"There were many people at the event.", native:"There were loads of people there — hundreds, I reckon.", note:"'Loads of' + vague amplification + 'I reckon'."},
+{topic:"Buying time", learner:"(silence while thinking)", native:"Let me think… well, that's a good question, actually. How shall I put it…", note:"Natives fill planning pauses with conventionalized stallers."},
+{topic:"Correcting someone politely", learner:"That is not correct. The meeting is on Tuesday.", native:"Actually, I think you'll find it's on Tuesday — unless they've moved it again!", note:"'I think you'll find' + light humor defuses correction."},
+{topic:"Expressing enthusiasm", learner:"I am very excited about the trip. It will be very good.", native:"Honestly, I can't wait for the trip — it's going to be amazing.", note:"'Can't wait' + strong adjective instead of stacked 'very'."},
+{topic:"Interrupting politely", learner:"Stop. I want to say something.", native:"Sorry, can I just jump in there for a second…?", note:"Apology + permission question = cooperative interruption."},
+{topic:"Reporting what someone said", learner:"Then he said that it was impossible, and I answered that it was possible.", native:"And he's like, 'No way that's happening,' and I'm like, 'Watch me.'", note:"Quotative 'be like' dramatizes instead of reporting."},
+{topic:"Being vague on purpose", learner:"We talked about various things.", native:"We just chatted about this and that — work, the kids, whatever.", note:"Vagueness tags ('this and that', 'whatever') are a fluency feature."},
+{topic:"Softening advice", learner:"You should exercise more and eat better food.", native:"You might want to get a bit more exercise, maybe watch what you eat a little?", note:"'Might want to' + diminutives turn commands into suggestions."}
+];
+
+/* ---------------- WEEKLY PLAN ---------------- */
+const WEEK_PLAN = [
+{day:"Monday", blocks:["Extensive reading 60 min (unsimplified; log unknown items)","SRS retrieval session 45 min (vocab + collocations)","Shadowing 30 min (prosody focus)"], habit:"Inner-speech narration blocks"},
+{day:"Tuesday", blocks:["Writing: one timed genre task 60 min; self-score with checklist","Rewrite based on checklist 45 min; update error log","Connected-speech dictation 30 min"], habit:"4/3/2 voice-note on today's topic"},
+{day:"Wednesday", blocks:["Reading-while-listening 60 min","Use of English drills 45 min (transformations, word formation)","Collocation mining from today's input 30 min"], habit:"Mentally rehearse tomorrow's conversations"},
+{day:"Thursday", blocks:["Speaking practice with partner/tutor 60 min (record)","Transcribe 3 min; repair errors; re-deliver 45 min","Shadowing 30 min (intonation focus)"], habit:"Hedge/backchannel spotting in one podcast episode"},
+{day:"Friday", blocks:["Extensive reading 60 min (different genre — interleave)","SRS session 45 min (due cards only)","Humor/pragmatics: sitcom decoding log 30 min"], habit:"Paraphrase one idea in 3 registers"},
+{day:"Saturday", blocks:["Exam simulation: one full CEQ paper under time (rotating)","Review against official criteria 45 min","Long conversation practice 30–60 min"], habit:"—"},
+{day:"Sunday", blocks:["Light input only: pleasure reading/listening","Weekly review: streaks, error-log trends, plan next week","Rest"], habit:"Monthly: full-English day (no L1 media)"}
+];
+
+/* ---------------- CEQ HUB DATA ---------------- */
+const EXAM_COMPARISON = {
+  headers:["Dimension","CEQ (C1 Advanced / C2 Proficiency)","IELTS Academic","TOEFL iBT"],
+  rows:[
+    ["Type","Level-targeted qualification, pass/fail; lifetime validity","Proficiency spectrum, bands 0–9; 2-year validity","Proficiency spectrum, 0–120; 2-year validity"],
+    ["Grammar/lexis paper","Yes — Use of English (cloze, word formation, transformations)","No (embedded in productive skills)","No (embedded)"],
+    ["Reading","90 min, 8 parts incl. gapped text & multiple matching","60 min, 3 long texts, 40 questions","~35 min, 2 passages, 20 questions"],
+    ["Listening","~40 min, recordings played TWICE, varied accents","~30 min, 4 recordings, once, multi-accent","~36 min, lectures + conversations, N. American"],
+    ["Writing","2 tasks in 90 min; genre-flexible; C2 adds cross-text summary-evaluation","Task 1 data description + Task 2 essay (double weight)","Integrated (read+listen+write) + Academic Discussion"],
+    ["Speaking","15 min, paired, face-to-face; 5 criteria + global mark (75 marks)","11–14 min, solo with live examiner, 4 criteria","Recorded to computer; rubric 0–4, engine + human scoring"],
+    ["C1 anchor","180–199 (Cambridge Scale)","Band 7.0–8.0","95–109"],
+    ["C2 anchor","200–230","Band 8.5–9.0","110–120"]
+  ]
+};
+
+const CAE_PAPERS = [
+{paper:"Reading & Use of English", format:"8 parts, 56 questions", time:"90 min", anchors:"32/56 → 180 (C1) · 43/56 → 200 (C2)"},
+{paper:"Writing", format:"Compulsory essay + choice (letter/report/review/proposal)", time:"90 min", anchors:"24/40 → 180 · 34/40 → 200"},
+{paper:"Listening", format:"4 parts, 30 questions, played twice", time:"~40 min", anchors:"18/30 → 180 · 26/30 → 200"},
+{paper:"Speaking", format:"4 parts, in pairs (interview, long turn, collaborative, discussion)", time:"~15 min/pair", anchors:"45/75 → 180 · 66/75 → 200"}
+];
+
+const EXAMINER_REWARDS = [
+"Range used with control — a controlled complex error outscores uniform simplicity.",
+"Appropriacy of lexis: correct collocation matters more than rare words.",
+"Extended stretches of speech with ease, very little hesitation.",
+"Contributions that are relevant, coherent, varied AND detailed.",
+"Interactive skill: initiating, linking to the partner, widening the scope, negotiating toward an outcome.",
+"Register consistency across an entire text.",
+"Explicit coverage of every element in the task rubric."
+];
+
+const FAILURE_POINTS = [
+{paper:"Reading & Use of English", points:["Choosing grammatically fine but non-collocating cloze answers","Missing negative prefixes in word formation (rely → unreliability)","Spending too long on Reading; starving Use of English (cap at 15–20 min)"]},
+{paper:"Listening", points:["Choosing literal-statement distractors instead of the speaker's final stance","Over-writing in sentence completion (answers are concise factual units)"]},
+{paper:"Writing", points:["Register inconsistency — the single biggest C1 failure","Missing a required content element","Weak paragraphing / no visible paragraph function"]},
+{paper:"Speaking", points:["Linear simple opinions without concessive structure","Not deploying inversion, conditionals, modal range, reported speech","Under-interacting with the partner"]}
+];
+
+</script>
+<script>
+/* ============================================================
+   C2 Mastery Lab — application engine (vanilla JS, no framework)
+   Modules: Store → UI helpers → Router → Views
+   All user progress is persisted through window.storage (per-user,
+   private) so it survives across sessions without localStorage.
+   ============================================================ */
+
+/* ---------------- icon helper ---------------- */
+function icon(name, cls) { return `<svg class="icon ${cls || ""}"><use href="#i-${name}"></use></svg>`; }
+
+/* ---------------- Store ---------------- */
+const Store = {
+  KEY: "c2masterylab_v1",
+  defaults: {
+    xp: 0,
+    streak: 0,
+    lastActive: null,           // ISO date string of last active day
+    activity: {},               // "YYYY-MM-DD" -> xp earned
+    srs: {},                    // word -> {box, due}
+    quiz: {done: 0, correct: 0, byCat: {}},
+    grammar: {done: 0, correct: 0, byArea: {}},
+    colloc: {done: 0, correct: 0},
+    idioms: {done: 0, correct: 0},
+    reading: {done: 0, correct: 0},
+    mistakesRevealed: [],
+    mistakesCorrect: {},
+    bookmarks: [],              // knowledge article ids
+    notes: [],                  // {id, text, tag, ts}
+    planChecks: {},             // "day-index" -> true
+    listeningLog: [],           // {date, category, minutes}
+    speakingLog: [],            // {date, part, seconds}
+    writingLog: [],             // {date, type, checklistScore}
+    compareSeen: []
+  },
+  data: null,
+  async load() {
+    try {
+      const res = await window.storage.get(this.KEY, false);
+      const parsed = res && res.value ? JSON.parse(res.value) : {};
+      this.data = Object.assign({}, this.defaults, parsed);
+    } catch (e) {
+      this.data = Object.assign({}, this.defaults);
+    }
+    return this.data;
+  },
+  save() {
+    // Fire-and-forget persistence: the in-memory `data` object is the
+    // source of truth for the running session; every mutation is also
+    // written through to storage in the background.
+    try {
+      window.storage.set(this.KEY, JSON.stringify(this.data), false).catch(() => {});
+    } catch (e) { /* storage unavailable — session still works from memory */ }
+  },
+  async reset() {
+    this.data = Object.assign({}, this.defaults);
+    try { await window.storage.delete(this.KEY, false); } catch (e) {}
+    this.save();
+  }
+};
+
+let S = null;
+
+/* ---------------- helpers ---------------- */
+const $ = (sel, el) => (el || document).querySelector(sel);
+const $$ = (sel, el) => Array.from((el || document).querySelectorAll(sel));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const todayStr = () => new Date().toISOString().slice(0, 10);
+const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function addXP(n, why) {
+  S.xp += n;
+  const d = todayStr();
+  S.activity[d] = (S.activity[d] || 0) + n;
+  touchStreak();
+  Store.save();
+  renderTopbar();
+  if (why) toast(`+${n} XP — ${why}`);
+}
+
+function touchStreak() {
+  const today = todayStr();
+  if (S.lastActive === today) return;
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  const yest = y.toISOString().slice(0, 10);
+  S.streak = (S.lastActive === yest) ? S.streak + 1 : 1;
+  S.lastActive = today;
+  Store.save();
+}
+
+function renderTopbar() {
+  $("#streakCount").textContent = S.streak;
+  $("#xpCount").textContent = S.xp;
+}
+
+function pct(done, total) { return total ? Math.round(100 * done / total) : 0; }
+
+/* mastery per skill area (0-100) */
+function masteryMap() {
+  const acc = (d, c) => (d === 0 ? 0 : Math.round(100 * c / d));
+  const srsDue = Object.keys(S.srs).length;
+  const srsMastered = Object.values(S.srs).filter(c => c.box >= 4).length;
+  return [
+    {name: "Quizzes", val: Math.min(100, acc(S.quiz.done, S.quiz.correct) || 0)},
+    {name: "Grammar", val: Math.min(100, acc(S.grammar.done, S.grammar.correct) || 0)},
+    {name: "Collocations", val: Math.min(100, acc(S.colloc.done, S.colloc.correct) || 0)},
+    {name: "Idioms & PV", val: Math.min(100, acc(S.idioms.done, S.idioms.correct) || 0)},
+    {name: "Vocabulary (SRS)", val: srsDue ? pct(srsMastered, srsDue) : 0},
+    {name: "Reading", val: Math.min(100, acc(S.reading.done, S.reading.correct) || 0)},
+    {name: "Mistakes fixed", val: pct(S.mistakesRevealed.length, MISTAKES.length)}
+  ];
+}
+
+/* ---------------- Router ---------------- */
+const Routes = {};
+let currentRoute = "dashboard";
+
+function go(route, arg) {
+  currentRoute = route;
+  $$(".nav-link").forEach(a => a.classList.toggle("active", a.dataset.nav === route));
+  $("#sidenav").classList.remove("open");
+  $("#scrim").classList.remove("show");
+  const main = $("#main");
+  main.innerHTML = "";
+  (Routes[route] || Routes.dashboard)(main, arg);
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+document.addEventListener("click", e => {
+  const nav = e.target.closest("[data-nav]");
+  if (nav) { go(nav.dataset.nav); }
+});
+$("#hamburger").addEventListener("click", () => {
+  $("#sidenav").classList.toggle("open");
+  $("#scrim").classList.toggle("show");
+});
+$("#scrim").addEventListener("click", () => {
+  $("#sidenav").classList.remove("open");
+  $("#scrim").classList.remove("show");
+});
+
+/* =====================================================
+   VIEW: Dashboard
+   ===================================================== */
+Routes.dashboard = main => {
+  const m = masteryMap();
+  const weekXP = Object.entries(S.activity)
+    .filter(([d]) => (Date.now() - new Date(d).getTime()) < 7 * 864e5)
+    .reduce((a, [, v]) => a + v, 0);
+  const totalAnswers = S.quiz.done + S.grammar.done + S.colloc.done + S.idioms.done + S.reading.done;
+  const totalCorrect = S.quiz.correct + S.grammar.correct + S.colloc.correct + S.idioms.correct + S.reading.correct;
+  main.innerHTML = `
+  <div class="view">
+    <h1>Dashboard</h1>
+    <p class="sub">Your command center for the B2 → C2 climb. Everything you do in the app feeds these numbers.</p>
+    <div class="grid cols-4">
+      <div class="card stat-card"><div class="big icon-wrap">${icon("flame")} ${S.streak}</div><div class="lbl">day streak</div></div>
+      <div class="card stat-card"><div class="big icon-wrap">${icon("zap")} ${S.xp}</div><div class="lbl">total XP</div></div>
+      <div class="card stat-card"><div class="big">${weekXP}</div><div class="lbl">XP this week</div></div>
+      <div class="card stat-card"><div class="big">${totalAnswers ? Math.round(100*totalCorrect/totalAnswers) : 0}%</div><div class="lbl">overall accuracy (${totalAnswers} answers)</div></div>
+    </div>
+    <h2>${icon("bar-chart")} Mastery by skill</h2>
+    <div class="card">
+      ${m.map(x => `
+        <div class="mastery-row">
+          <div class="name">${x.name}</div>
+          <div class="progress-bar" style="flex:1"><div style="width:${x.val}%"></div></div>
+          <div class="pct">${x.val}%</div>
+        </div>`).join("")}
+    </div>
+    <h2>Jump back in</h2>
+    <div class="grid cols-3">
+      <div class="card clickable" data-nav="flashcards"><h3>${icon("cards")} Due flashcards</h3><p>${dueCards().length} cards due for review today.</p></div>
+      <div class="card clickable" data-nav="quiz"><h3>${icon("check-circle")} Daily quiz</h3><p>Mixed 10-question quiz drawn from all categories.</p></div>
+      <div class="card clickable" data-nav="speaking"><h3>${icon("clock")} Timed speaking</h3><p>One prompt a day keeps hesitation away.</p></div>
+    </div>
+    <h2>The system in one picture</h2>
+    <div class="card"><p style="line-height:1.7">Evidence-ranked method stack: <strong>retrieval + spacing</strong> at the core (flashcards, quizzes) · <strong>massive input</strong> as the substrate (reading/listening trackers) · <strong>shadowing + 4/3/2</strong> as fluency engines · <strong>pushed output with feedback</strong> (speaking timers, writing studio) as the conversion mechanism — wrapped in a weekly schedule built on interleaving and desirable difficulties.</p></div>
+  </div>`;
+};
+
+/* =====================================================
+   VIEW: Study planner
+   ===================================================== */
+Routes.planner = main => {
+  const todayIdx = (new Date().getDay() + 6) % 7; // Monday=0
+  main.innerHTML = `
+  <div class="view">
+    <h1>Study Plans</h1>
+    <p class="sub">The evidence-prioritized weekly system (~12 h/week). Check off blocks as you complete them — checks reset each week.</p>
+    <div class="grid cols-2">
+      ${WEEK_PLAN.map((d, i) => `
+        <div class="card day-card" ${i === todayIdx ? 'style="border-left-color:var(--accent-2)"' : ""}>
+          <h3>${d.day} ${i === todayIdx ? '<span class="tag warm">today</span>' : ""}</h3>
+          <div class="blocks">
+            ${d.blocks.map((b, j) => `
+              <label class="check-line ${S.planChecks[i + "-" + j] ? "done" : ""}">
+                <input type="checkbox" data-plan="${i}-${j}" ${S.planChecks[i + "-" + j] ? "checked" : ""}>
+                <span>${esc(b)}</span>
+              </label>`).join("")}
+            <div style="margin-top:8px"><span class="tag blue">micro-habit</span> <span style="font-size:13px;color:var(--ink-soft)">${esc(d.habit)}</span></div>
+          </div>
+        </div>`).join("")}
+    </div>
+    <h2>Periodization</h2>
+    <div class="card"><p style="line-height:1.7"><strong>Weeks 1–8:</strong> input volume + SRS core + shadowing (build the substrate). <strong>Weeks 9–16:</strong> add heavy output loops and exam simulation (convert substrate into scorable performance). <strong>Final 4 weeks:</strong> 50/50 full simulations with criteria-based review and maintenance input.</p></div>
+    <h2>Monthly rhythm</h2>
+    <div class="grid cols-3">
+      <div class="card"><h3>Daily</h3><p>SRS due cards · shadowing 10–15 min · one input block · one micro-habit.</p></div>
+      <div class="card"><h3>Weekly</h3><p>One exam paper simulation · one recorded speaking session · error-log review · full checklist from the plan above.</p></div>
+      <div class="card"><h3>Monthly</h3><p>Full-English day · measure WPM and pauses in a recorded monologue · timed dictation accuracy check · self-score one essay with the Writing Studio checklist.</p></div>
+    </div>
+  </div>`;
+  $$("input[data-plan]", main).forEach(cb => cb.addEventListener("change", () => {
+    S.planChecks[cb.dataset.plan] = cb.checked;
+    if (!cb.checked) delete S.planChecks[cb.dataset.plan];
+    Store.save();
+    cb.closest(".check-line").classList.toggle("done", cb.checked);
+    if (cb.checked) addXP(2, "plan block completed");
+  }));
+};
+
+/* =====================================================
+   VIEW: Statistics
+   ===================================================== */
+Routes.stats = main => {
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const k = d.toISOString().slice(0, 10);
+    days.push({k, v: S.activity[k] || 0});
+  }
+  const max = Math.max(10, ...days.map(d => d.v));
+  const listenMin = S.listeningLog.reduce((a, l) => a + l.minutes, 0);
+  const speakMin = Math.round(S.speakingLog.reduce((a, l) => a + l.seconds, 0) / 60);
+  main.innerHTML = `
+  <div class="view">
+    <h1>Statistics</h1>
+    <p class="sub">Honest numbers, updated live.</p>
+    <h2>XP per day (last 30 days)</h2>
+    <div class="card" style="display:flex;align-items:flex-end;gap:4px;height:150px;padding-bottom:24px">
+      ${days.map(d => `<div title="${d.k}: ${d.v} XP" style="flex:1;background:${d.v ? "var(--accent)" : "#e9e6df"};height:${Math.max(4, Math.round(110 * d.v / max))}px;border-radius:3px 3px 0 0"></div>`).join("")}
+    </div>
+    <h2>Totals</h2>
+    <div class="grid cols-4">
+      <div class="card stat-card"><div class="big">${S.quiz.done}</div><div class="lbl">quiz answers (${pct(S.quiz.correct, S.quiz.done)}% correct)</div></div>
+      <div class="card stat-card"><div class="big">${S.grammar.done}</div><div class="lbl">grammar drills (${pct(S.grammar.correct, S.grammar.done)}%)</div></div>
+      <div class="card stat-card"><div class="big">${listenMin}</div><div class="lbl">listening minutes logged</div></div>
+      <div class="card stat-card"><div class="big">${speakMin}</div><div class="lbl">timed speaking minutes</div></div>
+    </div>
+    <div class="grid cols-4" style="margin-top:14px">
+      <div class="card stat-card"><div class="big">${Object.keys(S.srs).length}</div><div class="lbl">cards in SRS circulation</div></div>
+      <div class="card stat-card"><div class="big">${Object.values(S.srs).filter(c => c.box >= 4).length}</div><div class="lbl">cards mastered (box 4–5)</div></div>
+      <div class="card stat-card"><div class="big">${S.mistakesRevealed.length}</div><div class="lbl">of ${MISTAKES.length} mistakes studied</div></div>
+      <div class="card stat-card"><div class="big">${S.writingLog.length}</div><div class="lbl">writing tasks self-assessed</div></div>
+    </div>
+    <div class="btn-row"><button class="btn ghost" id="resetBtn">Reset all progress</button></div>
+  </div>`;
+  $("#resetBtn", main).addEventListener("click", async () => {
+    if (confirm("Really erase ALL progress? This cannot be undone.")) {
+      await Store.reset(); renderTopbar(); go("dashboard"); toast("Progress reset.");
+    }
+  });
+};
+
+/* =====================================================
+   VIEW: Notes & highlights
+   ===================================================== */
+Routes.notes = main => {
+  main.innerHTML = `
+  <div class="view">
+    <h1>Notes & Highlights</h1>
+    <p class="sub">Capture collocations, insights and error-log entries. Tag them so Search can find them later.</p>
+    <div class="card">
+      <textarea id="noteText" placeholder="Write a note… e.g. 'hedge criticism with: I see your point, but I wonder whether…'"></textarea>
+      <div class="btn-row">
+        <input type="text" id="noteTag" placeholder="tag (e.g. hedging, collocation, error-log)" style="max-width:260px">
+        <button class="btn" id="addNote">Save note</button>
+      </div>
+    </div>
+    <h2>Your notes (${S.notes.length})</h2>
+    <div id="noteList">
+      ${S.notes.length === 0 ? `<div class="empty-state"><div class="icon-wrap">${icon("note")}</div>No notes yet. Your future C2 self will thank you for starting.</div>` : ""}
+      ${S.notes.slice().reverse().map(n => `
+        <div class="note-item">
+          <div>${esc(n.text)}</div>
+          <div class="note-meta">
+            <span>${n.tag ? `<span class="tag blue">${esc(n.tag)}</span>` : ""} ${new Date(n.ts).toLocaleDateString()}</span>
+            <button class="bm-btn" data-del-note="${n.id}" title="Delete">${icon("trash")}</button>
+          </div>
+        </div>`).join("")}
+    </div>
+  </div>`;
+  $("#addNote", main).addEventListener("click", () => {
+    const text = $("#noteText", main).value.trim();
+    if (!text) return toast("Write something first.");
+    S.notes.push({id: Date.now(), text, tag: $("#noteTag", main).value.trim(), ts: Date.now()});
+    Store.save(); addXP(2, "note saved"); Routes.notes(main);
+  });
+  $$("[data-del-note]", main).forEach(b => b.addEventListener("click", () => {
+    S.notes = S.notes.filter(n => n.id !== +b.dataset.delNote);
+    Store.save(); Routes.notes(main);
+  }));
+};
+
+/* =====================================================
+   VIEW: Global search
+   ===================================================== */
+function searchIndex() {
+  const idx = [];
+  KNOWLEDGE.forEach(k => idx.push({type:"Knowledge", title:k.title, text:k.summary + " " + k.tags.join(" "), nav:"knowledge", arg:k.id}));
+  MISTAKES.forEach((m, i) => idx.push({type:"Mistake", title:m.wrong + " → " + m.right, text:m.why + " " + m.cat, nav:"mistakes", arg:i}));
+  FLASHCARDS.forEach(f => idx.push({type:"Vocabulary", title:f.word, text:f.def + " " + f.example, nav:"flashcards", arg:null}));
+  IDIOMS.forEach(f => idx.push({type:f.type, title:f.item, text:f.meaning + " " + f.example, nav:"idioms", arg:null}));
+  COMPARISONS.forEach(c => idx.push({type:"Native phrasing", title:c.topic, text:c.native + " " + c.note, nav:"native", arg:null}));
+  S.notes.forEach(n => idx.push({type:"Your note", title:n.text.slice(0, 60), text:n.tag || "", nav:"notes", arg:null}));
+  GRAMMAR_DRILLS.forEach(g => idx.push({type:"Grammar drill", title:g.prompt, text:g.area + " " + g.expl, nav:"grammar", arg:null}));
+  SPEAKING_PROMPTS.forEach(p => idx.push({type:"Speaking prompt", title:p.prompt.slice(0, 70) + "…", text:p.part, nav:"speaking", arg:null}));
+  return idx;
+}
+
+Routes.search = main => {
+  main.innerHTML = `
+  <div class="view">
+    <h1>Search Everything</h1>
+    <p class="sub">Searches the knowledge base, mistakes, flashcards, idioms, comparisons, drills, prompts — and your own notes.</p>
+    <input type="search" id="searchBox" placeholder="Try: inversion · heavy snow · hedging · shadowing · use of english…" autofocus>
+    <div id="searchResults" style="margin-top:18px"></div>
+  </div>`;
+  const idx = searchIndex();
+  const box = $("#searchBox", main), res = $("#searchResults", main);
+  const run = () => {
+    const q = box.value.trim().toLowerCase();
+    if (q.length < 2) { res.innerHTML = ""; return; }
+    const hits = idx.filter(x => (x.title + " " + x.text).toLowerCase().includes(q)).slice(0, 40);
+    res.innerHTML = hits.length === 0
+      ? `<div class="empty-state"><div class="icon-wrap">${icon("search")}</div>No matches for “${esc(q)}”.</div>`
+      : hits.map(h => `
+        <div class="card clickable" style="margin-bottom:10px" data-goto="${h.nav}" data-arg="${h.arg === null ? "" : h.arg}">
+          <span class="tag warm">${h.type}</span>
+          <h3 style="margin-top:6px">${esc(h.title)}</h3>
+          <p>${esc(h.text).slice(0, 140)}…</p>
+        </div>`).join("");
+    $$("[data-goto]", res).forEach(c => c.addEventListener("click", () => go(c.dataset.goto, c.dataset.arg || undefined)));
+  };
+  box.addEventListener("input", run);
+};
+
+/* =====================================================
+   VIEW: Knowledge base
+   ===================================================== */
+Routes.knowledge = (main, articleId) => {
+  if (articleId) {
+    const k = KNOWLEDGE.find(x => x.id === articleId);
+    if (k) return renderArticle(main, k);
+  }
+  const cats = [...new Set(KNOWLEDGE.map(k => k.cat))];
+  let filter = "All";
+  const draw = () => {
+    $("#kbGrid", main).innerHTML = KNOWLEDGE
+      .filter(k => filter === "All" || k.cat === filter)
+      .map(k => `
+      <div class="card clickable" data-article="${k.id}">
+        <span class="tag blue">${k.cat}</span>
+        <button class="bm-btn ${S.bookmarks.includes(k.id) ? "active" : ""}" data-bm="${k.id}" title="Bookmark">${icon("star")}</button>
+        <h3 style="margin-top:6px">${esc(k.title)}</h3>
+        <p>${esc(k.summary)}</p>
+      </div>`).join("");
+    $$("[data-article]", main).forEach(c => c.addEventListener("click", e => {
+      if (e.target.closest("[data-bm]")) return;
+      go("knowledge", c.dataset.article);
+    }));
+    $$("[data-bm]", main).forEach(b => b.addEventListener("click", e => {
+      e.stopPropagation();
+      const id = b.dataset.bm;
+      S.bookmarks = S.bookmarks.includes(id) ? S.bookmarks.filter(x => x !== id) : [...S.bookmarks, id];
+      Store.save(); draw();
+      toast(S.bookmarks.includes(id) ? "Bookmarked" : "Bookmark removed");
+    }));
+  };
+  main.innerHTML = `
+  <div class="view">
+    <h1>Knowledge Base</h1>
+    <p class="sub">The full research condensed into ${KNOWLEDGE.length} deep articles. Bookmark the ones you want to revisit.</p>
+    <div class="filter-bar">
+      ${["All", ...cats].map(c => `<button class="filter-chip ${c === "All" ? "active" : ""}" data-cat="${c}">${c}</button>`).join("")}
+    </div>
+    ${S.bookmarks.length ? `<div class="tip-box">${icon("star")} Bookmarked: ${S.bookmarks.map(id => `<a data-article-link="${id}" style="cursor:pointer;color:var(--accent);font-weight:600">${esc((KNOWLEDGE.find(k=>k.id===id)||{}).title || id)}</a>`).join(" · ")}</div>` : ""}
+    <div class="grid cols-2" id="kbGrid"></div>
+  </div>`;
+  $$(".filter-chip", main).forEach(ch => ch.addEventListener("click", () => {
+    filter = ch.dataset.cat;
+    $$(".filter-chip", main).forEach(c => c.classList.toggle("active", c === ch));
+    draw();
+  }));
+  $$("[data-article-link]", main).forEach(a => a.addEventListener("click", () => go("knowledge", a.dataset.articleLink)));
+  draw();
+};
+
+function renderArticle(main, k) {
+  main.innerHTML = `
+  <div class="view kb-article">
+    <button class="btn ghost small" id="backKb">← All articles</button>
+    <h1 style="margin-top:14px">${esc(k.title)}</h1>
+    <p class="sub">${k.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</p>
+    <div class="card" style="line-height:1.7">${k.body}</div>
+    <div class="btn-row">
+      <button class="btn ${S.bookmarks.includes(k.id) ? "warm" : ""}" id="bmBtn">${icon("star")} ${S.bookmarks.includes(k.id) ? "Bookmarked" : "Bookmark"}</button>
+      <button class="btn ghost" id="noteFromArticle">Copy key line to notes</button>
+    </div>
+  </div>`;
+  $("#backKb", main).addEventListener("click", () => go("knowledge"));
+  $("#bmBtn", main).addEventListener("click", () => {
+    S.bookmarks = S.bookmarks.includes(k.id) ? S.bookmarks.filter(x => x !== k.id) : [...S.bookmarks, k.id];
+    Store.save(); renderArticle(main, k);
+  });
+  $("#noteFromArticle", main).addEventListener("click", () => {
+    S.notes.push({id: Date.now(), text: "From article: " + k.title + " — " + k.summary, tag: k.cat, ts: Date.now()});
+    Store.save(); toast("Saved to notes");
+  });
+}
+
+/* =====================================================
+   VIEW: Native vs Learner
+   ===================================================== */
+Routes.native = main => {
+  let i = 0;
+  const seen = new Set(S.compareSeen);
+  const draw = () => {
+    const c = COMPARISONS[i];
+    $("#cmpBox", main).innerHTML = `
+      <div class="q-meta"><span>${c.topic}</span><span>${i + 1} / ${COMPARISONS.length}</span></div>
+      <div class="compare">
+        <div class="learner"><div class="who">Typical C1 learner</div>${esc(c.learner)}</div>
+        <div class="native"><div class="who">Educated native</div>${esc(c.native)}</div>
+      </div>
+      <div class="tip-box"><strong>Why the native version works:</strong> ${esc(c.note)}</div>`;
+    if (!seen.has(i)) { seen.add(i); S.compareSeen = [...seen]; Store.save(); addXP(1); }
+  };
+  main.innerHTML = `
+  <div class="view">
+    <h1>Native vs Learner Phrasing</h1>
+    <p class="sub">${COMPARISONS.length} side-by-side comparisons of the same communicative act. Study the differences, then imitate aloud.</p>
+    <div class="card q-card" id="cmpBox"></div>
+    <div class="btn-row">
+      <button class="btn ghost" id="cmpPrev">← Previous</button>
+      <button class="btn" id="cmpNext">Next →</button>
+      <button class="btn ghost" id="cmpRandom">Random</button>
+    </div>
+    <h2>Practice protocol</h2>
+    <div class="card"><p>1) Read the learner version — it will feel familiar. 2) Read the native version twice. 3) Cover it and say it aloud from memory. 4) Record yourself. 5) Save the most useful patterns to Notes with the tag <em>native-phrase</em>.</p></div>
+  </div>`;
+  draw();
+  $("#cmpPrev", main).addEventListener("click", () => { i = (i - 1 + COMPARISONS.length) % COMPARISONS.length; draw(); });
+  $("#cmpNext", main).addEventListener("click", () => { i = (i + 1) % COMPARISONS.length; draw(); });
+  $("#cmpRandom", main).addEventListener("click", () => { i = Math.floor(Math.random() * COMPARISONS.length); draw(); });
+};
+
+/* =====================================================
+   VIEW: 100 Mistakes
+   ===================================================== */
+Routes.mistakes = (main, jumpIdx) => {
+  const cats = [...new Set(MISTAKES.map(m => m.cat))];
+  let filter = "All", revealed = new Set(S.mistakesRevealed);
+  const draw = () => {
+    const list = MISTAKES.map((m, i) => ({...m, i})).filter(m => filter === "All" || m.cat === filter);
+    $("#mistList", main).innerHTML = list.map(m => `
+      <div class="mistake-item ${revealed.has(m.i) ? "revealed" : ""}" data-mi="${m.i}">
+        <span class="tag">${m.cat}</span>
+        <div class="wrong-s" style="margin-top:6px">${icon("x-circle")} ${esc(m.wrong)}</div>
+        <button class="btn small ghost" style="margin-top:8px" data-reveal="${m.i}">${revealed.has(m.i) ? "Hide" : "Reveal fix"}</button>
+        <div class="fix-row">
+          <div class="right-s">${icon("check-circle")} ${esc(m.right)}</div>
+          <div class="why">${esc(m.why)}</div>
+        </div>
+      </div>`).join("");
+    $$("[data-reveal]", main).forEach(b => b.addEventListener("click", e => {
+      e.stopPropagation();
+      const i = +b.dataset.reveal;
+      if (revealed.has(i)) revealed.delete(i);
+      else { revealed.add(i); addXP(1); }
+      S.mistakesRevealed = [...revealed];
+      Store.save(); draw();
+    }));
+  };
+  main.innerHTML = `
+  <div class="view">
+    <h1>The 100 Advanced Mistakes</h1>
+    <p class="sub">The errors C1 learners still make — with the reason and the correction. Try to spot the error before revealing. Studied: <strong>${S.mistakesRevealed.length}/${MISTAKES.length}</strong></p>
+    <div class="filter-bar">
+      ${["All", ...cats].map(c => `<button class="filter-chip ${c === "All" ? "active" : ""}" data-cat="${c}">${c}</button>`).join("")}
+    </div>
+    <div id="mistList"></div>
+  </div>`;
+  $$(".filter-chip", main).forEach(ch => ch.addEventListener("click", () => {
+    filter = ch.dataset.cat;
+    $$(".filter-chip", main).forEach(c => c.classList.toggle("active", c === ch));
+    draw();
+  }));
+  draw();
+  if (jumpIdx !== undefined && jumpIdx !== null) {
+    const el = $(`[data-mi="${jumpIdx}"]`, main);
+    if (el) el.scrollIntoView({behavior: "smooth", block: "center"});
+  }
+};
+
+/* =====================================================
+   Shared quiz engine
+   ===================================================== */
+function runQuizSession(main, opts) {
+  // opts: {title, sub, questions:[{q, options, answer, expl, cat}], onAnswer(isCorrect, q), backTo}
+  let i = 0, score = 0;
+  const qs = shuffle(opts.questions);
+  const draw = () => {
+    if (i >= qs.length) {
+      const pc = Math.round(100 * score / qs.length);
+      main.innerHTML = `
+      <div class="view">
+        <div class="card result-hero">
+          <div class="score">${score} / ${qs.length}</div>
+          <p style="font-size:16px;color:var(--ink-soft)">${pc >= 85 ? "Excellent — C2 trajectory. Keep the difficulty high." : pc >= 60 ? "Solid. Review the explanations you missed and retake in a few days (spacing!)." : "This area needs deliberate practice — revisit the Knowledge Base, then retry."}</p>
+          <div class="btn-row" style="justify-content:center">
+            <button class="btn" id="againBtn">New set</button>
+            <button class="btn ghost" data-nav="dashboard">Dashboard</button>
+          </div>
+        </div>
+      </div>`;
+      $("#againBtn", main).addEventListener("click", () => runQuizSession(main, opts));
+      return;
+    }
+    const q = qs[i];
+    main.innerHTML = `
+    <div class="view">
+      <h1>${opts.title}</h1>
+      <p class="sub">${opts.sub}</p>
+      <div class="card q-card">
+        <div class="q-meta"><span><span class="tag blue">${esc(q.cat || "")}</span></span><span>Question ${i + 1} / ${qs.length} · score ${score}</span></div>
+        <div class="progress-bar" style="margin:6px 0 14px"><div style="width:${pct(i, qs.length)}%"></div></div>
+        <div class="q-question">${esc(q.q)}</div>
+        <div id="optBox">
+          ${q.options.map((o, j) => `<button class="q-option" data-j="${j}">${esc(o)}</button>`).join("")}
+        </div>
+        <div class="q-expl" id="explBox"><strong>Explanation:</strong> ${esc(q.expl)}</div>
+        <div class="btn-row"><button class="btn" id="nextQ" style="display:none">${i === qs.length - 1 ? "See results" : "Next question"}</button></div>
+      </div>
+    </div>`;
+    $$(".q-option", main).forEach(btn => btn.addEventListener("click", () => {
+      const j = +btn.dataset.j;
+      const correct = j === q.answer;
+      $$(".q-option", main).forEach(b => {
+        b.disabled = true;
+        if (+b.dataset.j === q.answer) b.classList.add("correct");
+      });
+      if (!correct) btn.classList.add("wrong");
+      else score++;
+      opts.onAnswer(correct, q);
+      $("#explBox", main).classList.add("show");
+      $("#nextQ", main).style.display = "inline-block";
+    }));
+    $("#nextQ", main).addEventListener("click", () => { i++; draw(); });
+  };
+  draw();
+}
+
+/* ---------- VIEW: mixed quiz ---------- */
+Routes.quiz = main => {
+  runQuizSession(main, {
+    title: "Mixed Mastery Quiz",
+    sub: "10 questions sampled from the whole bank: exams, vocabulary, grammar, listening, speaking, writing, methods, cognition.",
+    questions: shuffle(QUIZ_BANK).slice(0, 10),
+    onAnswer(correct, q) {
+      S.quiz.done++; if (correct) S.quiz.correct++;
+      const c = q.cat || "General";
+      S.quiz.byCat[c] = S.quiz.byCat[c] || {done: 0, correct: 0};
+      S.quiz.byCat[c].done++; if (correct) S.quiz.byCat[c].correct++;
+      addXP(correct ? 3 : 1);
+      Store.save();
+    }
+  });
+};
+
+/* ---------- VIEW: grammar trainer ---------- */
+Routes.grammar = main => {
+  const areas = ["All areas", ...new Set(GRAMMAR_DRILLS.map(g => g.area))];
+  let area = "All areas";
+  const start = () => {
+    const pool = area === "All areas" ? GRAMMAR_DRILLS : GRAMMAR_DRILLS.filter(g => g.area === area);
+    runQuizSession(main, {
+      title: "Grammar Trainer",
+      sub: `Area: ${area}. ${pool.length} drills available — randomized sets of 10. Targets the fossilization hit-list: articles, prepositions, colligation, inversion, conditionals, modality.`,
+      questions: shuffle(pool).slice(0, 10).map(g => ({q: g.prompt, options: g.options, answer: g.options.indexOf(g.answer), expl: g.expl, cat: g.area})),
+      onAnswer(correct, q) {
+        S.grammar.done++; if (correct) S.grammar.correct++;
+        const a = q.cat;
+        S.grammar.byArea[a] = S.grammar.byArea[a] || {done: 0, correct: 0};
+        S.grammar.byArea[a].done++; if (correct) S.grammar.byArea[a].correct++;
+        addXP(correct ? 3 : 1);
+        Store.save();
+      }
+    });
+  };
+  main.innerHTML = `
+  <div class="view">
+    <h1>Grammar Trainer</h1>
+    <p class="sub">Pick a target area or train everything. Ranked difficulty follows the fossilization research: articles & prepositions are drilled hardest.</p>
+    <div class="grid cols-3">
+      ${areas.map(a => `
+        <div class="card clickable" data-area="${a}">
+          <h3>${a}</h3>
+          <p>${a === "All areas" ? GRAMMAR_DRILLS.length + " drills" : GRAMMAR_DRILLS.filter(g => g.area === a).length + " drills"}
+          ${S.grammar.byArea[a] ? " · " + pct(S.grammar.byArea[a].correct, S.grammar.byArea[a].done) + "% correct" : ""}</p>
+        </div>`).join("")}
+    </div>
+  </div>`;
+  $$("[data-area]", main).forEach(c => c.addEventListener("click", () => { area = c.dataset.area; start(); }));
+};
+
+/* ---------- VIEW: collocations ---------- */
+Routes.collocations = main => {
+  runQuizSession(main, {
+    title: "Collocation Lab",
+    sub: "Choose the word that makes the natural English phrase. Collocation is what examiners mean by 'appropriacy'.",
+    questions: shuffle(COLLOCATIONS).slice(0, 12).map(c => ({q: c.prompt, options: c.options, answer: c.answer, expl: c.expl, cat: "Collocation"})),
+    onAnswer(correct) {
+      S.colloc.done++; if (correct) S.colloc.correct++;
+      addXP(correct ? 3 : 1); Store.save();
+    }
+  });
+};
+
+/* ---------- VIEW: idioms & phrasal verbs ---------- */
+Routes.idioms = main => {
+  main.innerHTML = `
+  <div class="view">
+    <h1>Idioms & Phrasal Verbs</h1>
+    <p class="sub">${IDIOMS.length} high-value items. Study the bank, then test yourself — meaning-to-item and item-to-meaning.</p>
+    <div class="btn-row">
+      <button class="btn" id="idiomQuiz">Quiz me (10 items)</button>
+      <button class="btn ghost" id="idiomBank">Browse the bank</button>
+    </div>
+    <div id="idiomArea" style="margin-top:18px"></div>
+  </div>`;
+  $("#idiomQuiz", main).addEventListener("click", () => {
+    const items = shuffle(IDIOMS).slice(0, 10);
+    const questions = items.map(it => {
+      const distract = shuffle(IDIOMS.filter(x => x.item !== it.item)).slice(0, 3).map(x => x.meaning);
+      const options = shuffle([it.meaning, ...distract]);
+      return {q: `What does “${it.item}” mean? (register: ${it.register})`, options, answer: options.indexOf(it.meaning), expl: `${it.item} — ${it.meaning}. Example: ${it.example}`, cat: it.type};
+    });
+    runQuizSession(main, {
+      title: "Idioms & Phrasal Verbs Quiz",
+      sub: "Meaning recognition. Use each item aloud in a sentence afterwards for productive transfer.",
+      questions,
+      onAnswer(correct) { S.idioms.done++; if (correct) S.idioms.correct++; addXP(correct ? 3 : 1); Store.save(); }
+    });
+  });
+  $("#idiomBank", main).addEventListener("click", () => {
+    $("#idiomArea", main).innerHTML = `
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Item</th><th>Type</th><th>Meaning</th><th>Example</th><th>Register</th></tr></thead>
+        <tbody>${IDIOMS.map(x => `<tr><td><strong>${esc(x.item)}</strong></td><td>${x.type}</td><td>${esc(x.meaning)}</td><td><em>${esc(x.example)}</em></td><td>${esc(x.register)}</td></tr>`).join("")}</tbody>
+      </table></div>`;
+  });
+};
+
+/* =====================================================
+   VIEW: Flashcards with spaced repetition
+   ===================================================== */
+const SRS_INTERVALS = [0, 1, 2, 4, 7, 15]; // box -> days until due
+function dueCards() {
+  const now = Date.now();
+  return FLASHCARDS.filter(f => {
+    const s = S.srs[f.word];
+    return !s || s.due <= now;
+  });
+}
+
+Routes.flashcards = main => {
+  const queue = shuffle(dueCards());
+  let i = 0, learned = 0;
+  const totalNew = FLASHCARDS.length - Object.keys(S.srs).length;
+  const draw = () => {
+    if (i >= queue.length) {
+      main.innerHTML = `
+      <div class="view">
+        <div class="card result-hero">
+          <div class="score">${learned} reviewed</div>
+          <p style="color:var(--ink-soft)">Session complete. ${dueCards().length - 0} cards still due right now · ${totalNew} new cards not yet in circulation.</p>
+          <div class="btn-row" style="justify-content:center">
+            <button class="btn" id="reloadFc">Check for more</button>
+            <button class="btn ghost" data-nav="dashboard">Dashboard</button>
+          </div>
+        </div>
+      </div>`;
+      $("#reloadFc", main).addEventListener("click", () => Routes.flashcards(main));
+      return;
+    }
+    const f = queue[i];
+    const st = S.srs[f.word] || {box: 0};
+    main.innerHTML = `
+    <div class="view">
+      <h1>Vocabulary Flashcards</h1>
+      <p class="sub">Spaced repetition (5-box schedule: 1 → 2 → 4 → 7 → 15 days). Try to RECALL the meaning before flipping — retrieval is the workout.</p>
+      <div class="q-meta"><span>Card ${i + 1} / ${queue.length} · Box ${st.box} · due today: ${queue.length}</span><span>${FLASHCARDS.length} cards in bank</span></div>
+      <div class="flash-stage">
+        <div class="flashcard" id="fcard">
+          <div class="flash-face front">
+            <div class="word">${esc(f.word)}</div>
+            <div class="hint">${esc(f.pos)} — what does it mean? Say it, then tap to flip.</div>
+          </div>
+          <div class="flash-face back">
+            <div class="answer"><strong>${esc(f.word)}</strong> ${esc(f.pos)}<br>${esc(f.def)}</div>
+            <div class="example">“${esc(f.example)}”</div>
+            <div class="hint" style="margin-top:10px"><span class="tag blue">collocations</span> ${esc(f.colloc)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="srs-buttons" id="srsBtns" style="display:none">
+        <button class="btn warm" data-grade="again">Again<br><small>&lt;10 min</small></button>
+        <button class="btn ghost" data-grade="hard">Hard<br><small>+1 day</small></button>
+        <button class="btn" data-grade="good">Good<br><small>next box</small></button>
+        <button class="btn green" data-grade="easy">Easy<br><small>skip box</small></button>
+      </div>
+    </div>`;
+    const card = $("#fcard", main);
+    card.addEventListener("click", () => {
+      card.classList.add("flipped");
+      $("#srsBtns", main).style.display = "flex";
+    });
+    $$("[data-grade]", main).forEach(b => b.addEventListener("click", () => {
+      const g = b.dataset.grade;
+      let s = S.srs[f.word] || {box: 0, due: 0};
+      if (g === "again") { s.box = 0; s.due = Date.now() + 10 * 60 * 1000; queue.push(f); }
+      else if (g === "hard") { s.box = Math.max(0, s.box); s.due = Date.now() + 864e5; }
+      else if (g === "good") { s.box = Math.min(5, s.box + 1); s.due = Date.now() + SRS_INTERVALS[s.box] * 864e5; }
+      else { s.box = Math.min(5, s.box + 2); s.due = Date.now() + SRS_INTERVALS[s.box] * 864e5; }
+      S.srs[f.word] = s; learned++;
+      addXP(g === "again" ? 1 : 2);
+      Store.save(); i++; draw();
+    }));
+  };
+  if (queue.length === 0) {
+    main.innerHTML = `
+    <div class="view">
+      <h1>Vocabulary Flashcards</h1>
+      <div class="empty-state"><div class="icon-wrap">${icon("check-circle")}</div>
+        <p>Nothing due right now. Every one of the ${Object.keys(S.srs).length} cards in circulation is scheduled for the future.<br>Come back tomorrow — or learn ahead by resetting boxes below.</p>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn" id="addNew">Introduce 10 new cards</button>
+          <button class="btn ghost" data-nav="dashboard">Dashboard</button>
+        </div>
+      </div>
+    </div>`;
+    $("#addNew", main).addEventListener("click", () => {
+      FLASHCARDS.filter(f => !S.srs[f.word]).slice(0, 10).forEach(f => S.srs[f.word] = {box: 0, due: 0});
+      Store.save(); Routes.flashcards(main);
+    });
+    return;
+  }
+  draw();
+};
+
+/* =====================================================
+   VIEW: Pronunciation & shadowing
+   ===================================================== */
+Routes.pronunciation = main => {
+  main.innerHTML = `
+  <div class="view">
+    <h1>Pronunciation & Shadowing Studio</h1>
+    <p class="sub">Target: intelligibility and prosodic control — not accent erasure. Research shows accent and comprehensibility are independent.</p>
+    <h2>1 · Connected speech: what natives actually say</h2>
+    <div class="table-wrap"><table class="data">
+      <thead><tr><th>Phenomenon</th><th>Written</th><th>Actually sounds like</th><th>Rule</th></tr></thead>
+      <tbody>${CONNECTED_SPEECH.map(c => `<tr><td><strong>${c.feature}</strong></td><td>${esc(c.written)}</td><td><em>${esc(c.sounds)}</em></td><td>${esc(c.note)}</td></tr>`).join("")}</tbody>
+    </table></div>
+    <h2>2 · Word-stress drills (say aloud, tap the table on the stressed syllable)</h2>
+    <div class="grid cols-2">
+      ${STRESS_DRILLS.map(s => `<div class="card"><h3 style="font-size:15px">${esc(s.family)}</h3><p>${esc(s.rule)}</p></div>`).join("")}
+    </div>
+    <h2>3 · Shadowing scripts</h2>
+    <div class="note-box"><strong>Protocol:</strong> 1) Listen to the original (find similar audio via the Listening Tracker resources). 2) Pre-shadow with the audio before reading. 3) Study the text and focus points. 4) Post-shadow until you match the rhythm. 5) Record yourself and compare. 10–15 min daily.</div>
+    ${SHADOW_SCRIPTS.map((s, i) => `
+      <div class="card" style="margin-bottom:12px">
+        <span class="tag warm">${s.level}</span>
+        <h3 style="margin-top:6px">${esc(s.title)}</h3>
+        <p id="script-${i}" style="line-height:1.8;font-size:15px">${esc(s.text)}</p>
+        <div class="tip-box"><strong>Focus:</strong> ${esc(s.focus)}</div>
+        <div class="btn-row">
+          <button class="btn small ghost" data-mark="${i}">Mark weak forms</button>
+          <button class="btn small ghost" data-copy="${i}">Copy to notes</button>
+        </div>
+      </div>`).join("")}
+    <h2>4 · The pronunciation priority hierarchy</h2>
+    <div class="card"><p style="line-height:1.7"><strong>1. Intelligibility</strong> — fix anything listeners genuinely can't decode (vowel length contrasts, final consonants). <strong>2. Comprehensibility</strong> — reduce listener effort: word stress, sentence stress, weak forms, rhythm. <strong>3. Accentedness</strong> — optional polish; the weakest functional payoff for the highest cost.</p></div>
+  </div>`;
+  $$("[data-mark]", main).forEach(b => b.addEventListener("click", () => {
+    const el = $("#script-" + b.dataset.mark, main);
+    if (el.dataset.marked) { el.innerHTML = esc(SHADOW_SCRIPTS[+b.dataset.mark].text); delete el.dataset.marked; return; }
+    el.dataset.marked = "1";
+    const weak = ["to","of","a","and","the","you","your","that","it","is","are","was","were","been","have","has","had","do","does","did","at","as","for","from","an","but","not","we","I","in","on"];
+    el.innerHTML = esc(SHADOW_SCRIPTS[+b.dataset.mark].text).split(" ").map(w => {
+      const clean = w.replace(/[^A-Za-z']/g, "").toLowerCase();
+      return weak.includes(clean) ? `<span style="color:#9aa7b5">${w}</span>` : `<strong>${w}</strong>`;
+    }).join(" ");
+    toast("Function words greyed out — stress the bold ones");
+  }));
+  $$("[data-copy]", main).forEach(b => b.addEventListener("click", () => {
+    const s = SHADOW_SCRIPTS[+b.dataset.copy];
+    S.notes.push({id: Date.now(), text: "Shadow script (" + s.title + "): " + s.text, tag: "shadowing", ts: Date.now()});
+    Store.save(); toast("Copied to notes");
+  }));
+};
+
+/* =====================================================
+   VIEW: Speaking prompts with timer
+   ===================================================== */
+Routes.speaking = main => {
+  let timer = null;
+  main.innerHTML = `
+  <div class="view">
+    <h1>Speaking Prompts</h1>
+    <p class="sub">Timed practice mirrors exam conditions. Record yourself (phone/voice app), then self-review with the tips.</p>
+    <div class="grid cols-2">
+      ${SPEAKING_PROMPTS.map((p, i) => `
+        <div class="card">
+          <span class="tag blue">${esc(p.part)}</span>
+          <h3 style="margin-top:8px;font-size:15px">${esc(p.prompt)}</h3>
+          <p><strong>${p.seconds}s</strong> · ${esc(p.tips)}</p>
+          <div class="btn-row"><button class="btn small" data-start="${i}">Start timer</button></div>
+        </div>`).join("")}
+    </div>
+    <div class="card" id="timerCard" style="display:none;margin-top:18px;text-align:center">
+      <div class="timer-display" id="timerDisp">0:00</div>
+      <p id="timerPrompt" style="color:var(--ink-soft);margin:8px 0"></p>
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn warm" id="timerStop">Stop & log</button>
+      </div>
+    </div>
+  </div>`;
+  $$("[data-start]", main).forEach(b => b.addEventListener("click", () => {
+    const p = SPEAKING_PROMPTS[+b.dataset.start];
+    clearInterval(timer);
+    let left = p.seconds;
+    $("#timerCard", main).style.display = "block";
+    $("#timerPrompt", main).textContent = p.prompt;
+    const disp = $("#timerDisp", main);
+    disp.classList.add("running");
+    const fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    disp.textContent = fmt(left);
+    $("#timerCard", main).scrollIntoView({behavior: "smooth"});
+    timer = setInterval(() => {
+      left--;
+      disp.textContent = fmt(Math.max(0, left));
+      if (left <= 0) {
+        clearInterval(timer);
+        disp.classList.remove("running");
+        disp.textContent = "Time!";
+        S.speakingLog.push({date: todayStr(), part: p.part, seconds: p.seconds});
+        Store.save(); addXP(5, "speaking task completed");
+      }
+    }, 1000);
+    $("#timerStop", main).onclick = () => {
+      clearInterval(timer);
+      disp.classList.remove("running");
+      const done = p.seconds - Math.max(0, left);
+      if (done > 10) {
+        S.speakingLog.push({date: todayStr(), part: p.part, seconds: done});
+        Store.save(); addXP(3, "partial speaking logged");
+      }
+      $("#timerCard", main).style.display = "none";
+    };
+  }));
+};
+
+/* =====================================================
+   VIEW: Writing studio
+   ===================================================== */
+Routes.writing = main => {
+  main.innerHTML = `
+  <div class="view">
+    <h1>Writing Studio</h1>
+    <p class="sub">Timed tasks in CEQ/IELTS genres + the examiner-aligned self-assessment checklist. Draft here or on paper; the checklist is the point.</p>
+    <div class="grid cols-2">
+      ${WRITING_TASKS.map((t, i) => `
+        <div class="card">
+          <span class="tag blue">${esc(t.type)}</span> <span class="tag">${t.words}</span> <span class="tag warm">${t.minutes} min</span>
+          <p style="margin-top:10px;line-height:1.6">${esc(t.task)}</p>
+          <div class="btn-row"><button class="btn small" data-task="${i}">Open workspace</button></div>
+        </div>`).join("")}
+    </div>
+    <div id="workspace" style="margin-top:20px"></div>
+    <h2>The native-style difference (keep in view)</h2>
+    <div class="card"><p style="line-height:1.7">Expert prose is noun-phrase dense, honors the given→new contract, uses ellipsis instead of repetition, varies sentence length deliberately, and holds ONE register. Learner prose at C1 is still conversational, front-loads metadiscourse ("In this essay I will discuss…"), and sequences with Firstly/Secondly.</p></div>
+  </div>`;
+  $$("[data-task]", main).forEach(b => b.addEventListener("click", () => {
+    const t = WRITING_TASKS[+b.dataset.task];
+    $("#workspace", main).innerHTML = `
+      <div class="card">
+        <h3>${esc(t.type)} — workspace</h3>
+        <p style="color:var(--ink-soft);margin:6px 0 12px">${esc(t.task)}</p>
+        <textarea id="draft" style="min-height:220px" placeholder="Write your ${t.minutes}-minute draft here…"></textarea>
+        <div style="margin-top:8px;font-size:13px;color:var(--ink-soft)">Words: <span id="wc">0</span> (target ${t.words})</div>
+        <h3 style="margin-top:18px">Self-assessment checklist (examiner-aligned)</h3>
+        ${WRITING_CHECKLIST.map((c, j) => `
+          <label class="check-line"><input type="checkbox" data-wc="${j}"><span>${esc(c)}</span></label>`).join("")}
+        <div class="btn-row">
+          <button class="btn green" id="logWriting">Log task & score</button>
+          <button class="btn ghost" id="saveDraftNote">Save draft to notes</button>
+        </div>
+        <div id="wResult" style="margin-top:10px"></div>
+      </div>`;
+    $("#workspace", main).scrollIntoView({behavior: "smooth"});
+    $("#draft", main).addEventListener("input", e => {
+      $("#wc", main).textContent = e.target.value.trim().split(/\s+/).filter(Boolean).length;
+    });
+    $("#saveDraftNote", main).addEventListener("click", () => {
+      const v = $("#draft", main).value.trim();
+      if (!v) return toast("Draft is empty.");
+      S.notes.push({id: Date.now(), text: "Draft (" + t.type + "): " + v.slice(0, 500), tag: "writing", ts: Date.now()});
+      Store.save(); toast("Draft saved to notes");
+    });
+    $("#logWriting", main).addEventListener("click", () => {
+      const checks = $$("input[data-wc]", main);
+      const score = checks.filter(c => c.checked).length;
+      S.writingLog.push({date: todayStr(), type: t.type, checklistScore: score});
+      Store.save();
+      addXP(5 + score, "writing task logged");
+      $("#wResult", main).innerHTML = `<div class="${score >= 8 ? "tip-box" : "note-box"}"><strong>Checklist score: ${score}/10.</strong> ${score >= 8 ? "Strong — this would sit at Band 4-5 territory if the language matches. Get expert feedback to confirm." : score >= 5 ? "Decent foundation. Focus next draft on the unchecked items — they are your cheapest band gains." : "The unchecked items are exactly where examiners take marks. Rewrite addressing three of them, then re-check."}</div>`;
+    });
+  }));
+};
+
+/* =====================================================
+   VIEW: Reading lab
+   ===================================================== */
+Routes.reading = main => {
+  let pi = 0;
+  const draw = () => {
+    const p = READING_PASSAGES[pi];
+    main.innerHTML = `
+    <div class="view kb-article">
+      <h1>Reading Lab</h1>
+      <p class="sub">C1–C2 level passages with Cambridge-style inference questions. Read for stance and implication, not just facts.</p>
+      <div class="filter-bar">
+        ${READING_PASSAGES.map((x, i) => `<button class="filter-chip ${i === pi ? "active" : ""}" data-p="${i}">${esc(x.title)} (${x.level})</button>`).join("")}
+      </div>
+      <div class="card" style="line-height:1.85;font-size:15.5px">
+        <h3>${esc(p.title)}</h3>
+        ${p.text.split("\n\n").map(par => `<p>${esc(par)}</p>`).join("")}
+      </div>
+      <div id="rq" style="margin-top:16px"></div>
+      <div class="tip-box"><strong>Speed tip:</strong> time yourself. Target 180+ wpm with full comprehension. Reread the passage once after answering — repeated reading is a proven fluency builder.</div>
+    </div>`;
+    $$("[data-p]", main).forEach(b => b.addEventListener("click", () => { pi = +b.dataset.p; draw(); }));
+    runQuizSession($("#rq", main), {
+      title: "Comprehension questions",
+      sub: "",
+      questions: p.questions.map(q => ({q: q.q, options: q.options, answer: q.answer, expl: q.expl, cat: "Reading"})),
+      onAnswer(correct) { S.reading.done++; if (correct) S.reading.correct++; addXP(correct ? 3 : 1); Store.save(); }
+    });
+  };
+  draw();
+};
+
+/* =====================================================
+   VIEW: Listening tracker
+   ===================================================== */
+Routes.listening = main => {
+  const draw = () => {
+    const total = S.listeningLog.reduce((a, l) => a + l.minutes, 0);
+    const week = S.listeningLog.filter(l => (Date.now() - new Date(l.date).getTime()) < 7 * 864e5).reduce((a, l) => a + l.minutes, 0);
+    $("#listenLog", main).innerHTML = `
+      <div class="grid cols-3">
+        <div class="card stat-card"><div class="big">${total}</div><div class="lbl">total minutes</div></div>
+        <div class="card stat-card"><div class="big">${week}</div><div class="lbl">this week</div></div>
+        <div class="card stat-card"><div class="big">${S.listeningLog.length}</div><div class="lbl">sessions</div></div>
+      </div>
+      ${S.listeningLog.length ? `<h2 style="margin-top:18px">Recent sessions</h2>
+      <div class="table-wrap"><table class="data"><thead><tr><th>Date</th><th>Type</th><th>Minutes</th></tr></thead>
+      <tbody>${S.listeningLog.slice(-10).reverse().map(l => `<tr><td>${l.date}</td><td>${esc(l.category)}</td><td>${l.minutes}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
+  };
+  main.innerHTML = `
+  <div class="view">
+    <h1>Listening Tracker</h1>
+    <p class="sub">Near-native listening = decoding + accents + pragmatics. Log every session; volume is the engine.</p>
+    <h2>Training plan</h2>
+    <div class="table-wrap"><table class="data">
+      <thead><tr><th>Goal</th><th>Activity</th><th>Frequency</th></tr></thead>
+      <tbody>${LISTENING_PLAN.map(l => `<tr><td><strong>${l.goal}</strong></td><td>${esc(l.activity)}</td><td>${l.freq}</td></tr>`).join("")}</tbody>
+    </table></div>
+    <h2>Log a session</h2>
+    <div class="card">
+      <div class="btn-row" style="margin-top:0">
+        <select id="lCat" style="max-width:300px">
+          ${LISTENING_PLAN.map(l => `<option>${l.goal}</option>`).join("")}
+          <option>Free listening (media)</option>
+        </select>
+        <input type="text" id="lMin" placeholder="minutes (e.g. 20)" style="max-width:160px" inputmode="numeric">
+        <button class="btn" id="lAdd">Log</button>
+      </div>
+    </div>
+    <div id="listenLog" style="margin-top:14px"></div>
+    <h2>Curated resources</h2>
+    <div class="grid cols-2">
+      ${LISTENING_RESOURCES.map(r => `<div class="card"><span class="tag blue">${esc(r.kind)}</span><h3 style="margin-top:6px;font-size:15px">${esc(r.name)}</h3><p>${esc(r.note)}</p></div>`).join("")}
+    </div>
+  </div>`;
+  draw();
+  $("#lAdd", main).addEventListener("click", () => {
+    const mins = parseInt($("#lMin", main).value, 10);
+    if (!mins || mins <= 0) return toast("Enter minutes.");
+    S.listeningLog.push({date: todayStr(), category: $("#lCat", main).value, minutes: mins});
+    Store.save(); addXP(Math.min(10, Math.round(mins / 3)), "listening logged");
+    $("#lMin", main).value = "";
+    draw();
+  });
+};
+
+/* =====================================================
+   VIEW: CEQ / IELTS / TOEFL hub
+   ===================================================== */
+Routes.ceq = main => {
+  main.innerHTML = `
+  <div class="view">
+    <h1>CEQ / IELTS / TOEFL Hub</h1>
+    <p class="sub">Everything the research found about the exams — formats, scales, what examiners reward, and where candidates fail.</p>
+    <h2>C1 Advanced papers & score anchors</h2>
+    <div class="table-wrap"><table class="data">
+      <thead><tr><th>Paper</th><th>Format</th><th>Time</th><th>Raw → Scale anchors</th></tr></thead>
+      <tbody>${CAE_PAPERS.map(p => `<tr><td><strong>${p.paper}</strong></td><td>${p.format}</td><td>${p.time}</td><td>${p.anchors}</td></tr>`).join("")}</tbody>
+    </table></div>
+    <h2>CEQ vs IELTS vs TOEFL</h2>
+    <div class="table-wrap"><table class="data">
+      <thead><tr>${EXAM_COMPARISON.headers.map(h => `<th>${h}</th>`).join("")}</tr></thead>
+      <tbody>${EXAM_COMPARISON.rows.map(r => `<tr>${r.map((c, i) => `<td>${i === 0 ? "<strong>" + c + "</strong>" : c}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table></div>
+    <h2>What examiners reward (speaking & writing)</h2>
+    <div class="card"><ul style="padding-left:20px;line-height:1.8">${EXAMINER_REWARDS.map(r => `<li>${r}</li>`).join("")}</ul></div>
+    <h2>Common failure points by paper</h2>
+    <div class="grid cols-2">
+      ${FAILURE_POINTS.map(f => `
+        <div class="card"><h3>${f.paper}</h3>
+          <ul style="padding-left:18px;line-height:1.7;color:var(--ink-soft);font-size:14px">${f.points.map(p => `<li>${p}</li>`).join("")}</ul>
+        </div>`).join("")}
+    </div>
+    <h2>Strategy for a mastery-driven learner</h2>
+    <div class="card"><p style="line-height:1.7">Make <strong>CEQ your primary target</strong>: Use of English directly trains the depth knowledge mastery requires (transformations = grammar flexibility, word formation = morphology, paired speaking = interaction), and the certificate never expires. Treat IELTS/TOEFL as calibration checkpoints — their preparation is more test-craft than proficiency. For TOEFL, note the speaking engine scores rate, pauses and hesitations directly: fluency training (4/3/2, shadowing) converts straight into points.</p></div>
+    <div class="btn-row">
+      <button class="btn" data-nav="speaking">Practice timed speaking</button>
+      <button class="btn ghost" data-nav="writing">Writing studio</button>
+      <button class="btn ghost" data-nav="grammar">Grammar trainer</button>
+    </div>
+  </div>`;
+};
+
+/* =====================================================
+   Init
+   ===================================================== */
+(async function init() {
+  S = await Store.load();
+  touchStreak();
+  renderTopbar();
+  go("dashboard");
+  const boot = document.getElementById("bootScreen");
+  if (boot) boot.remove();
+})();
+
+</script>
+</body>
+</html>
